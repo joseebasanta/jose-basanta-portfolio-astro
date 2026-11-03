@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/sections/Header.astro';
+import Footer from '@/components/sections/Footer.astro';
+import Hero from '@/components/sections/Hero.astro';
+import ProjectCard from '@/components/sections/ProjectCard.astro';
+import ScrollProgress from '@/components/motion/ScrollProgress.astro';
+import Container from '@/components/ui/Container.astro';
+import Reveal from '@/components/motion/Reveal.astro';
+
+const projects = (await getCollection('projects'))
+  .filter((project) => project.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Home"
+  description="Freelance UI/UX and product designer building research-backed interfaces and design systems."
+>
+  <ScrollProgress />
+  <Header />
+  <main>
+    <Hero />
+    <section class="pb-section">
+      <Container>
+        <Reveal as="div" class="mb-10">
+          <h2 class="text-heading font-display font-semibold text-foreground">Selected work</h2>
+        </Reveal>
+        <div class="grid gap-8 sm:grid-cols-2">
+          {projects.map((project, index) => (
+            <ProjectCard project={project} delay={index * 0.05} />
+          ))}
+        </div>
+      </Container>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

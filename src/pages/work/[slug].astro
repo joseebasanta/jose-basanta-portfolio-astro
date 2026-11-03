@@ -1,0 +1,70 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/sections/Header.astro';
+import Footer from '@/components/sections/Footer.astro';
+import ScrollProgress from '@/components/motion/ScrollProgress.astro';
+import Container from '@/components/ui/Container.astro';
+import Reveal from '@/components/motion/Reveal.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { title, client, role, year, tags, cover, summary } = project.data;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={title} description={summary}>
+  <ScrollProgress />
+  <Header />
+  <main>
+    <article class="py-section">
+      <Container class="max-w-3xl">
+        <Reveal as="div">
+          <p class="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+            {client} · {year}
+          </p>
+          <h1 class="mt-4 text-heading font-display font-semibold text-foreground">{title}</h1>
+          <p class="mt-4 text-lg text-muted-foreground">{summary}</p>
+          <dl class="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm">
+            <div class="flex gap-2">
+              <dt class="text-muted-foreground">Role</dt>
+              <dd class="text-foreground">{role}</dd>
+            </div>
+          </dl>
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <li class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+
+        <Reveal as="div" delay={0.1} class="mt-10">
+          <Image
+            src={cover}
+            alt={`${title} cover`}
+            width={1200}
+            height={800}
+            class="w-full rounded-card border border-border object-cover"
+          />
+        </Reveal>
+
+        <Reveal as="div" delay={0.15}>
+          <div class="mt-10 space-y-4 text-foreground [&_h2]:mt-8 [&_h2]:font-display [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-foreground [&_li]:text-muted-foreground [&_p]:text-muted-foreground [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5">
+            <Content />
+          </div>
+        </Reveal>
+      </Container>
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>

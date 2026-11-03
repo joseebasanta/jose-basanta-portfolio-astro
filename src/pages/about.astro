@@ -1,0 +1,42 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/sections/Header.astro';
+import Footer from '@/components/sections/Footer.astro';
+import ScrollProgress from '@/components/motion/ScrollProgress.astro';
+import Container from '@/components/ui/Container.astro';
+import Reveal from '@/components/motion/Reveal.astro';
+import Button from '@/components/ui/Button.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="Jose Basanta is a freelance UI/UX and product designer specializing in research-backed interfaces and design systems."
+>
+  <ScrollProgress />
+  <Header />
+  <main>
+    <section class="py-section">
+      <Container class="max-w-3xl">
+        <Reveal as="div">
+          <h1 class="text-heading font-display font-semibold text-foreground">About</h1>
+        </Reveal>
+        <Reveal as="div" delay={0.1}>
+          <div class="mt-6 space-y-4 text-muted-foreground">
+            <p>
+              I'm a product designer who works across research, UI, and the interaction details that
+              decide whether an interface feels considered or merely finished.
+            </p>
+            <p>
+              Replace this paragraph with your real bio: how you work, the kinds of problems you
+              take on, and the industries or product types you know best.
+            </p>
+          </div>
+        </Reveal>
+        <Reveal as="div" delay={0.2} class="mt-10">
+          <Button href="mailto:hello@example.com">Get in touch</Button>
+        </Reveal>
+      </Container>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

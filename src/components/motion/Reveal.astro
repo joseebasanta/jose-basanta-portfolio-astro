@@ -1,0 +1,56 @@
+---
+interface Props {
+  /** Delay in seconds before the reveal animation starts, once in view. */
+  delay?: number;
+  /** HTML element to render as the wrapper. */
+  as?: 'div' | 'section' | 'li' | 'article';
+  class?: string;
+}
+
+const { delay = 0, as: Tag = 'div', class: className } = Astro.props;
+---
+
+<Tag class:list={['reveal', className]} data-reveal data-reveal-delay={delay}>
+  <slot />
+</Tag>
+
+<style>
+  /*
+   * Visible by default: if JS never runs (reduced motion, JS disabled,
+   * script error), content is never stuck invisible.
+   */
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+
+<script>
+  import { animate, inView } from 'motion';
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    const elements = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+    elements.forEach((element) => {
+      const delay = Number(element.dataset.revealDelay ?? 0);
+
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(24px)';
+
+      const stop = inView(
+        element,
+        () => {
+          animate(
+            element,
+            { opacity: 1, transform: 'translateY(0px)' },
+            { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] },
+          );
+          stop();
+        },
+        { amount: 0.3, margin: '0px 0px -10% 0px' },
+      );
+    });
+  }
+</script>

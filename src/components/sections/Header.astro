@@ -1,0 +1,32 @@
+---
+import Container from '@/components/ui/Container.astro';
+
+const links = [
+  { href: '/', label: 'Work' },
+  { href: '/about', label: 'About' },
+  { href: '/playground', label: 'Playground' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="border-b border-border py-6">
+  <Container class="flex items-center justify-between">
+    <a href="/" class="font-display text-base font-semibold tracking-tight">
+      Jose Basanta
+    </a>
+    <nav class="flex items-center gap-6 text-sm text-muted-foreground">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            'transition-colors hover:text-foreground',
+            currentPath === link.href && 'text-foreground',
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </Container>
+</header>

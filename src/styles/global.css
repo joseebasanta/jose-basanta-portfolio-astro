@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /*
+   * Global safety net: even if a motion component's JS fails to load,
+   * nothing should rely on animation to become visible or usable.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Reveal from '@/components/motion/Reveal.astro';
+import MagneticButton from '@/components/motion/MagneticButton';
+---
+
+<section class="py-section">
+  <Container>
+    <Reveal as="div">
+      <p class="mb-4 text-sm font-medium uppercase tracking-widest text-muted-foreground">
+        UI/UX &amp; Product Design
+      </p>
+    </Reveal>
+    <Reveal as="div" delay={0.1}>
+      <h1 class="max-w-3xl text-display font-display font-semibold text-foreground">
+        I design products people actually enjoy using.
+      </h1>
+    </Reveal>
+    <Reveal as="div" delay={0.2}>
+      <p class="mt-6 max-w-xl text-lg text-muted-foreground">
+        Freelance product designer focused on research-backed interfaces, design systems, and the
+        small interaction details that make software feel considered.
+      </p>
+    </Reveal>
+    <Reveal as="div" delay={0.3}>
+      <div class="mt-10 flex items-center gap-4">
+        <MagneticButton href="/about" client:visible>
+          About me
+        </MagneticButton>
+      </div>
+    </Reveal>
+  </Container>
+</section>

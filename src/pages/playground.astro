@@ -1,0 +1,88 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/sections/Header.astro';
+import Footer from '@/components/sections/Footer.astro';
+import ScrollProgress from '@/components/motion/ScrollProgress.astro';
+import Container from '@/components/ui/Container.astro';
+import Reveal from '@/components/motion/Reveal.astro';
+import MagneticButton from '@/components/motion/MagneticButton';
+---
+
+<BaseLayout
+  title="Playground"
+  description="A working demo of every animation primitive in this starter: Reveal, MagneticButton, and the scroll progress bar."
+  noindex
+>
+  <ScrollProgress />
+  <Header />
+  <main>
+    <section class="py-section">
+      <Container class="max-w-3xl">
+        <Reveal as="div">
+          <h1 class="text-heading font-display font-semibold text-foreground">Playground</h1>
+          <p class="mt-4 text-muted-foreground">
+            A working reference for every motion primitive in this project. Scroll this page to see
+            the progress bar at the very top of the viewport, and enable "reduce motion" in your OS
+            accessibility settings to confirm every example below degrades to a static, fully
+            visible state.
+          </p>
+        </Reveal>
+
+        <Reveal as="div" delay={0.1} class="mt-16">
+          <h2 class="text-xl font-display font-semibold text-foreground">
+            1. Reveal (vanilla, <code class="text-sm text-accent-secondary">inView</code>)
+          </h2>
+          <p class="mt-2 text-muted-foreground">
+            Each box below is wrapped in a <code class="text-accent-secondary">&lt;Reveal&gt;</code>
+            component. They fade and slide up independently as they enter the viewport, with a
+            staggered delay.
+          </p>
+          <div class="mt-6 grid gap-4 sm:grid-cols-3">
+            {[0, 0.1, 0.2].map((delay) => (
+              <Reveal as="div" delay={delay}>
+                <div class="flex h-32 items-center justify-center rounded-card border border-border bg-surface text-sm text-muted-foreground">
+                  delay: {delay}s
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal as="div" delay={0.1} class="mt-16">
+          <h2 class="text-xl font-display font-semibold text-foreground">
+            2. MagneticButton (React island,{' '}
+            <code class="text-sm text-accent-secondary">motion/react</code>)
+          </h2>
+          <p class="mt-2 text-muted-foreground">
+            Move your cursor near the button — it eases toward the pointer with a spring, then
+            springs back on mouse leave. Hydrated with{' '}
+            <code class="text-accent-secondary">client:visible</code>.
+          </p>
+          <div class="mt-6 flex items-center gap-4">
+            <MagneticButton client:visible>Hover me</MagneticButton>
+          </div>
+        </Reveal>
+
+        <Reveal as="div" delay={0.1} class="mt-16">
+          <h2 class="text-xl font-display font-semibold text-foreground">
+            3. Scroll progress (vanilla, <code class="text-sm text-accent-secondary">scroll</code>)
+          </h2>
+          <p class="mt-2 text-muted-foreground">
+            A thin bar pinned to the very top of the viewport tracks overall page scroll progress
+            from 0 to 1. It's mounted globally in{' '}
+            <code class="text-accent-secondary">BaseLayout</code>
+            on every page via <code class="text-accent-secondary">&lt;ScrollProgress /&gt;</code>.
+          </p>
+        </Reveal>
+
+        <Reveal as="div" delay={0.1} class="mt-16 mb-10">
+          <div class="rounded-card border border-border bg-surface p-8 text-center text-muted-foreground">
+            Keep scrolling — spacer to demonstrate the scroll progress bar.
+          </div>
+          <div class="mt-4 h-[60vh] rounded-card border border-dashed border-border" />
+        </Reveal>
+      </Container>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

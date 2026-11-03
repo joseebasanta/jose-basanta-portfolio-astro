@@ -1,0 +1,19 @@
+---
+import Container from '@/components/ui/Container.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-border py-10 text-sm text-muted-foreground">
+  <Container class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+    <p>&copy; {year} Jose Basanta. All rights reserved.</p>
+    <div class="flex gap-6">
+      <a href="mailto:hello@example.com" class="transition-colors hover:text-foreground">
+        Email
+      </a>
+      <a href="https://linkedin.com" class="transition-colors hover:text-foreground">
+        LinkedIn
+      </a>
+    </div>
+  </Container>
+</footer>
