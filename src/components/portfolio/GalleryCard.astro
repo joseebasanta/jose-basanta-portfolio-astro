@@ -1,0 +1,39 @@
+---
+interface Props {
+  project: {
+    id: string;
+    title: string;
+    kind: string;
+    image: string;
+    description: string;
+    alt: string;
+  };
+  variant?: 'standard' | 'poster' | 'framed';
+}
+const { project, variant = 'standard' } = Astro.props;
+---
+
+<button
+  class:list={['project-card', 'gallery-tile', variant]}
+  data-project={project.id}
+  data-kind={project.kind.toLowerCase()}
+  aria-label={`Explore ${project.title} — ${project.kind}`}
+>
+  <div class="project-image">
+    <img
+      src={`/images/portfolio/${project.image}.webp`}
+      alt={project.alt}
+      width="1000"
+      height={variant === 'poster' ? 1000 : 800}
+      loading={variant === 'poster' ? 'eager' : 'lazy'}
+    />
+  </div>
+  <div class="project-caption">
+    <div class="caption-top">
+      <h2>{project.title}</h2>
+      <span class="project-tag">{project.kind}</span>
+      <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+    </div>
+    <p>{project.description}</p>
+  </div>
+</button>

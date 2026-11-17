@@ -7,7 +7,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com', // TODO: replace with your real domain once live
+  devToolbar: { enabled: false },
+  site: 'https://jose-basanta-portfolio-astro.vercel.app',
   integrations: [react(), mdx()],
   vite: {
     plugins: [tailwindcss()],
