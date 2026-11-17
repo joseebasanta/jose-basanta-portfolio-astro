@@ -3,6 +3,15 @@
 Personal UI/UX & product design portfolio. Astro + Tailwind CSS v4 + Motion, statically
 generated.
 
+The homepage draft uses a dark, responsive gallery with project previews, a manually
+controlled featured carousel, and a playground filter. Projects are sample concepts;
+the biography and contact information can be personalized later. See
+[the desktop preview](docs/previews/dark-desktop.webp) and
+[the mobile preview](docs/previews/dark-mobile.webp).
+
+Vercel's GitHub integration uses `vercel.json` to install from the npm lockfile,
+run the production build (including Astro checks), and publish `dist/`.
+
 ## Stack
 
 - **[Astro](https://docs.astro.build)** — static-first framework, TypeScript strict mode.
@@ -95,7 +104,7 @@ See `src/content/projects/nimbus-expense-tracker.mdx` for a full example.
 
 ## Before deploying
 
-- [ ] Replace the placeholder `site` URL in `astro.config.mjs` with your real domain.
+- [ ] Confirm the public `site` URL in `astro.config.mjs` if you add a custom domain.
 - [ ] Replace `public/og-default.png` with a real Open Graph image (1200×630).
 - [ ] Replace the `mailto:`/LinkedIn placeholders in `Footer.astro` and `about.astro`.
 - [ ] Add real fonts to `public/fonts/` and wire them into `src/styles/global.css` (currently
