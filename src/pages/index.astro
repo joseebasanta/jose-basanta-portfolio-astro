@@ -1,69 +1,68 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import GalleryCard from '@/components/portfolio/GalleryCard.astro';
-import '@fontsource-variable/inter';
 import '@phosphor-icons/web/regular';
 import '@/styles/portfolio.css';
 const projects = [
   {
     id: 'nimbus',
+    category: 'product-design',
+    shape: 'tall',
     title: 'Nimbus',
     kind: 'Concept',
-    image: 'nimbus',
-    description: 'A calm, modern take on personal finance.',
     detail:
       'An exploration of a calmer way to see your money. A clear overview, thoughtful hierarchy, and a little breathing room turn everyday finances into something more approachable.',
     discipline: 'Product design · Interface design',
-    alt: 'Nimbus finance dashboard on a laptop against a soft blue background',
   },
   {
     id: 'elsewhere',
+    category: 'playground',
+    shape: 'wide',
     title: 'Elsewhere',
     kind: 'Concept',
-    image: 'elsewhere',
-    description: 'A travel editorial for curious trips.',
     detail:
       'A travel editorial concept for taking the scenic route. Warm photography and expressive typography make room for places, stories, and the joy of discovering somewhere new.',
     discipline: 'Web design · Art direction',
-    alt: 'Elsewhere travel editorial with an Italian coastal village and lemon leaves',
   },
   {
     id: 'variable-type',
+    category: 'playground',
+    shape: 'square',
     title: 'Variable Type',
     kind: 'Experiment',
-    image: 'type-dark',
-    description: 'A playground for type, motion, and expression.',
     detail:
       'A small experiment in the expressive side of typography. Move the slider below and see how a single letterform changes character.',
     discipline: 'Typography · Interaction',
-    alt: 'Expressive ivory typography on a black Variable Type poster',
   },
   {
     id: 'field',
+    category: 'product-design',
+    shape: 'wide',
     title: 'Field',
     kind: 'Concept',
-    image: 'field',
-    description: 'A focused space for planning and making progress.',
     detail:
       'A productivity concept built around a quieter day. Simple lists, gentle color, and a focused workspace help make the next step feel clear.',
     discipline: 'Product design · Interaction',
-    alt: 'Mint green productivity application showing a Today task list',
   },
   {
     id: 'orbit',
+    category: 'product-design',
+    shape: 'tall',
     title: 'Orbit',
     kind: 'Concept',
-    image: 'orbit',
-    description: 'A different rhythm for everyday listening.',
     detail:
       'An independent music-app concept exploring a more expressive listening experience. Dark surfaces, bold artwork, and a focused library put the music first.',
     discipline: 'Product design · Visual exploration',
-    alt: 'Dark Orbit music app interface with cobalt blue album art and a silver orbital sculpture',
   },
 ];
-const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
-  projects.find((p) => p.id === id)!,
-);
+const filters = [
+  { id: 'work', label: 'Selected work' },
+  { id: 'product-design', label: 'Product design' },
+  { id: 'playground', label: 'Explorations' },
+];
+const columns = [
+  [projects[0], projects[2], projects[4]],
+  [projects[1], projects[3]],
+];
 ---
 
 <BaseLayout
@@ -73,233 +72,68 @@ const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
   <a class="skip-link" href="#gallery">
     Skip to projects
   </a>
-  <main class="studio-shell" id="work">
+  <main class="studio-shell">
     <aside class="profile-column" aria-label="About Jose">
-      <section class="profile-card">
-        <img
-          class="avatar"
-          src="/images/portfolio/avatar.png"
-          alt="Jose Basanta monogram"
-          width="80"
-          height="80"
-        />
-        <div class="profile-identity">
-          <h1>Jose Basanta</h1>
-          <p class="role">Product Designer</p>
-        </div>
-        <div class="profile-bio">
-          <p>A space for things I design, build, and explore.</p>
-          <p>
-            Product concepts, interfaces, and small experiments. A collection of ideas taking shape
-            through design and code.
-          </p>
-        </div>
-        <div class="profile-experiments">
-          <span class="muted-label">Experiments</span>
-          <button data-project="variable-type">
-            <i class="ph ph-arrow-right" aria-hidden="true"></i> Variable Type
-          </button>
-          <button data-project="field">
-            <i class="ph ph-arrow-right" aria-hidden="true"></i> Field
-          </button>
-          <button data-open="playground-dialog">
-            <i class="ph ph-arrow-right" aria-hidden="true"></i> The playground
-          </button>
-        </div>
-        <p class="profile-signoff">Always curious. Always making.</p>
-        <div class="profile-actions">
-          <button class="icon-button" data-open="about-dialog" aria-label="About Jose">
-            <i class="ph ph-user" aria-hidden="true"></i>
-          </button>
-          <button class="contact-button" data-open="contact-dialog">
-            <i class="ph ph-envelope-simple" aria-hidden="true"></i> Say hello
-          </button>
-        </div>
-        <nav class="view-nav" aria-label="Main navigation">
-          <a class="active" href="#work" data-view="work" aria-current="page">
-            All work
-          </a>
-          <a href="#playground" data-view="playground">
-            Playground
-          </a>
-          <button data-open="about-dialog">About</button>
-        </nav>
-      </section>
-      <section class="current-card">
-        <span class="muted-label">Currently exploring</span>
-        <h2>Design + code.</h2>
-        <p>
-          Small interactions.
-          <br />
-          Thoughtful interfaces.
+      <div>
+        <h1>Jose Basanta</h1>
+        <p class="profile-bio">
+          I'm a product designer. This is a space for the interfaces, ideas, and experiments I
+          design and build.
         </p>
-        <button class="text-link" data-project="variable-type">
-          See what's in play <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-        </button>
-        <i class="ph ph-code card-symbol" aria-hidden="true"></i>
-      </section>
-      <figure class="coffee-card">
-        <img
-          src="/images/portfolio/coffee.webp"
-          alt="A coffee mug and lavender notebook in a quiet sunlit corner"
-          width="600"
-          height="730"
-          loading="lazy"
-        />
-        <figcaption>A little space to think.</figcaption>
-      </figure>
+        <div class="profile-actions">
+          <button type="button" data-open="about-dialog">
+            About me
+          </button>
+          <button type="button" class="contact-button" data-open="contact-dialog">
+            Get in touch <i class="ph ph-envelope-simple" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <nav class="profile-links" aria-label="More from Jose">
+        <a href="/playground/">
+          Playground <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+        </a>
+        <a href="https://github.com/joseebasanta">
+          GitHub <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+        </a>
+      </nav>
     </aside>
 
-    <section class="work-section" id="gallery" aria-label="Projects and experiments">
-      <div class="view-heading" hidden>
-        <span class="muted-label">Small ideas. Open possibilities.</span>
-        <h2>The playground</h2>
-      </div>
-      <section
-        class="feature-card gallery-tile"
-        data-kind="concept"
-        aria-label="Featured projects"
-        aria-roledescription="carousel"
-      >
-        <button
-          class="feature-open"
-          data-project="nimbus"
-          aria-label="Explore featured project Nimbus"
-        >
-          <img
-            id="feature-image"
-            src="/images/portfolio/nimbus.webp"
-            alt={projects[0].alt}
-            width="1500"
-            height="820"
-            fetchpriority="high"
-          />
-          <span class="feature-caption" id="feature-caption">
-            Nimbus — a calmer kind of finance{' '}
-            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-          </span>
-        </button>
-        <div class="slide-controls" role="group" aria-label="Choose featured project">
-          {featuredProjects.map((p, index) => (
-            <button
-              class:list={['slide-dot', { selected: index === 0 }]}
-              data-slide={index}
-              data-image={p.image}
-              data-title={p.title}
-              data-id={p.id}
-              data-alt={p.alt}
-              aria-label={`Show ${p.title}`}
-              aria-pressed={index === 0}
-            >
-              <span class="sr-only">{p.title}</span>
-            </button>
-          ))}
-        </div>
-      </section>
-      <div class="practice-row" data-gallery-support>
-        <section class="practice-card">
-          <span class="muted-label">The practice</span>
-          <div class="practice-items">
-            <span>
-              <i class="ph ph-layout" aria-hidden="true"></i>Product
-            </span>
-            <span>
-              <i class="ph ph-cursor" aria-hidden="true"></i>Interaction
-            </span>
-            <span>
-              <i class="ph ph-code" aria-hidden="true"></i>Code
-            </span>
-          </div>
-        </section>
-        <section class="focus-card">
-          <span class="muted-label">Currently in the mix</span>
-          <h2>A little work. A lot of play.</h2>
-          <p>Exploring the details that make a difference.</p>
-          <i class="ph ph-sparkle" aria-hidden="true"></i>
-        </section>
-      </div>
-      <div class="center-grid">
-        <div class="project-stack concept-stack">
-          <GalleryCard project={projects.find((p) => p.id === 'field')!} />
-          <GalleryCard project={projects.find((p) => p.id === 'orbit')!} />
-          <section class="design-note" data-gallery-support>
-            <i class="ph ph-quotes" aria-hidden="true"></i>
-            <p>
-              Useful things.
-              <br />
-              Unexpected details.
-            </p>
-            <span class="muted-label">A note to keep creating.</span>
-          </section>
-        </div>
-        <div class="project-stack">
-          <button
-            class="project-card gallery-tile playground-card"
-            data-kind="experiment"
-            data-open="playground-dialog"
-            aria-label="Explore the playground collection"
+    <section class="work-section" id="gallery" aria-label="Projects and experiments" tabindex="-1">
+      <nav class="gallery-nav" aria-label="Filter projects">
+        {filters.map((filter, index) => (
+          <a
+            href={`#${filter.id}`}
+            data-view={filter.id}
+            aria-current={index === 0 ? 'true' : undefined}
           >
-            <div class="project-image">
-              <img
-                src="/images/portfolio/folder.webp"
-                alt="A lavender folder filled with ideas"
-                width="900"
-                height="730"
-                loading="lazy"
-              />
-            </div>
-            <div class="project-caption">
-              <div class="caption-top">
-                <h2>Playground</h2>
-                <span class="project-tag">Experiment</span>
-                <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-              </div>
-              <p>Small tools, UI studies, and happy accidents.</p>
-            </div>
-          </button>
-          <section class="workbench-card">
-            <span class="muted-label">On the workbench</span>
-            <h2>Room for curiosity.</h2>
-            <button data-project="variable-type">
-              <span>01</span> Type in motion <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-            </button>
-            <button data-project="field">
-              <span>02</span> Everyday interfaces{' '}
-              <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-            </button>
-            <button data-open="playground-dialog">
-              <span>03</span> Little web experiments{' '}
-              <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-            </button>
-          </section>
-        </div>
+            {filter.label}
+          </a>
+        ))}
+      </nav>
+      <div class="project-grid">
+        {columns.map((column) => (
+          <div class="project-stack">
+            {column.map((project) => (
+              <button
+                type="button"
+                class:list={['project-card', project.shape]}
+                data-project={project.id}
+                data-category={project.category}
+                aria-label={`Explore ${project.title} — ${project.kind}`}
+              >
+                <span class="project-caption">
+                  <span class="project-name">{project.title}</span>
+                  <span class="project-kind">{project.kind}</span>
+                  <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+                </span>
+              </button>
+            ))}
+          </div>
+        ))}
       </div>
     </section>
-    <aside class="right-column" aria-label="More projects">
-      <GalleryCard project={projects.find((p) => p.id === 'variable-type')!} variant="poster" />
-      <GalleryCard project={projects.find((p) => p.id === 'elsewhere')!} variant="framed" />
-      <section class="contact-card">
-        <i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>
-        <span class="muted-label">Let's make something thoughtful.</span>
-        <h2>
-          Good things start
-          <br />
-          with a conversation.
-        </h2>
-        <button class="text-link" data-open="contact-dialog">
-          Say hello <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-        </button>
-      </section>
-    </aside>
   </main>
-  <footer class="site-footer">
-    <span>
-      Jose Basanta <span class="footer-divider">/</span> A work in progress.
-    </span>
-    <a href="#work" data-back-top>
-      Back to top <i class="ph ph-arrow-up" aria-hidden="true"></i>
-    </a>
-  </footer>
   {projects.map((p) => (
     <dialog
       class="studio-dialog project-dialog"
@@ -309,14 +143,7 @@ const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
       <button class="close-button" data-close aria-label="Close project">
         <i class="ph ph-x" aria-hidden="true"></i>
       </button>
-      <img
-        class="dialog-cover"
-        src={`/images/portfolio/${p.image}.webp`}
-        alt={p.alt}
-        width="1200"
-        height="656"
-        loading="lazy"
-      />
+      <div class="dialog-cover" aria-hidden="true"></div>
       <div class="dialog-content">
         <span class="eyebrow">{p.discipline}</span>
         <h2 id={`title-${p.id}`}>
@@ -350,13 +177,6 @@ const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
       <i class="ph ph-x" aria-hidden="true"></i>
     </button>
     <div class="dialog-content">
-      <img
-        class="avatar"
-        src="/images/portfolio/avatar.png"
-        width="80"
-        height="80"
-        alt="Jose Basanta monogram"
-      />
       <span class="eyebrow">A little introduction</span>
       <h2 id="about-title">Hi, I'm Jose.</h2>
       <p>
@@ -378,44 +198,13 @@ const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
     <div class="dialog-content">
       <i class="ph ph-paper-plane-tilt dialog-icon" aria-hidden="true"></i>
       <span class="eyebrow">Say hello</span>
-      <h2 id="contact-title">
-        Good things start
-        <br />
-        with a conversation.
-      </h2>
+      <h2 id="contact-title">Good things start with a conversation.</h2>
       <p>
         Contact details are coming soon. In the meantime, take a look around — there's plenty to
         explore.
       </p>
       <button class="primary-button" data-close>
         Back to exploring <i class="ph ph-arrow-right" aria-hidden="true"></i>
-      </button>
-    </div>
-  </dialog>
-  <dialog
-    class="studio-dialog small-dialog"
-    id="playground-dialog"
-    aria-labelledby="playground-title"
-  >
-    <button class="close-button" data-close aria-label="Close playground">
-      <i class="ph ph-x" aria-hidden="true"></i>
-    </button>
-    <img
-      class="folder-cover"
-      src="/images/portfolio/folder.webp"
-      alt="Lavender playground folder"
-      width="900"
-      height="730"
-      loading="lazy"
-    />
-    <div class="dialog-content">
-      <span class="eyebrow">Room for a little curiosity</span>
-      <h2 id="playground-title">A work in play.</h2>
-      <p>
-        Small experiments in type, interaction, and the details that make an interface feel alive.
-      </p>
-      <button class="primary-button" data-project="variable-type">
-        Try Variable Type <i class="ph ph-arrow-right" aria-hidden="true"></i>
       </button>
     </div>
   </dialog>
@@ -454,69 +243,25 @@ const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
         document.documentElement.classList.remove('dialog-open');
     });
   });
-  const applyView = () => {
-    const playground = window.location.hash === '#playground';
-    document.querySelector('.studio-shell')?.classList.toggle('is-playground', playground);
-    const heading = document.querySelector<HTMLElement>('.view-heading');
-    if (heading) heading.hidden = !playground;
-    document.querySelectorAll<HTMLElement>('.gallery-tile').forEach((card) => {
-      card.hidden = playground && card.dataset.kind !== 'experiment';
+  const filters = [...document.querySelectorAll<HTMLAnchorElement>('[data-view]')];
+  const cards = document.querySelectorAll<HTMLButtonElement>('[data-category]');
+
+  const applyFilter = () => {
+    const requested = location.hash.slice(1);
+    const active = filters.some((link) => link.dataset.view === requested) ? requested : 'work';
+
+    cards.forEach((card) => {
+      card.hidden = active !== 'work' && card.dataset.category !== active;
     });
-    document.querySelectorAll<HTMLElement>('[data-gallery-support]').forEach((item) => {
-      item.hidden = playground;
-    });
-    document.querySelectorAll<HTMLAnchorElement>('[data-view]').forEach((link) => {
-      const active = link.dataset.view === (playground ? 'playground' : 'work');
-      link.classList.toggle('active', active);
-      if (active) link.setAttribute('aria-current', 'page');
+    filters.forEach((link) => {
+      if (link.dataset.view === active) link.setAttribute('aria-current', 'true');
       else link.removeAttribute('aria-current');
     });
   };
-  window.addEventListener('hashchange', applyView);
-  applyView();
-  const slideButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-slide]')];
-  const selectSlide = (index: number) => {
-    const selected = slideButtons[index];
-    if (!selected) return;
-    const image = document.querySelector<HTMLImageElement>('#feature-image');
-    const opener = document.querySelector<HTMLButtonElement>('.feature-open');
-    const caption = document.querySelector<HTMLElement>('#feature-caption');
-    if (image) {
-      image.src = `/images/portfolio/${selected.dataset.image}.webp`;
-      image.alt = selected.dataset.alt!;
-    }
-    if (opener) {
-      opener.dataset.project = selected.dataset.id;
-      opener.setAttribute('aria-label', `Explore featured project ${selected.dataset.title}`);
-    }
-    if (caption)
-      caption.firstChild!.textContent = `${selected.dataset.title} — a design exploration `;
-    slideButtons.forEach((button, i) => {
-      button.classList.toggle('selected', i === index);
-      button.setAttribute('aria-pressed', String(i === index));
-    });
-  };
-  slideButtons.forEach((button, index) => {
-    button.addEventListener('click', () => selectSlide(index));
-    button.addEventListener('keydown', (event) => {
-      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
-      event.preventDefault();
-      const next =
-        (index + (event.key === 'ArrowRight' ? 1 : -1) + slideButtons.length) % slideButtons.length;
-      selectSlide(next);
-      slideButtons[next].focus();
-    });
-  });
-  document
-    .querySelector('[data-back-top]')
-    ?.addEventListener('click', () =>
-      window.scrollTo({
-        top: 0,
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-          ? 'instant'
-          : 'smooth',
-      }),
-    );
+
+  window.addEventListener('hashchange', applyFilter);
+  applyFilter();
+
   const slider = document.querySelector<HTMLInputElement>('#type-weight');
   slider?.addEventListener('input', () => {
     const specimen = document.querySelector<HTMLElement>('.type-specimen');
