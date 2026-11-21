@@ -70,6 +70,57 @@ body:has(.studio-shell) {
   background: #f5edff;
 }
 
+.about-trigger {
+  position: relative;
+}
+
+.about-portrait {
+  position: absolute;
+  z-index: 1;
+  inset: auto auto calc(100% + 6px) 50%;
+  inline-size: 112px;
+  padding: 6px;
+  border: 1px solid #ffffff20;
+  border-radius: 10px;
+  background: var(--studio-surface);
+  box-shadow: 0 8px 20px #0006;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(8px) scale(0.94);
+  transform-origin: bottom center;
+  transition:
+    opacity 150ms ease-out,
+    transform 200ms ease-out;
+}
+
+.about-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.about-trigger:focus-visible .about-portrait {
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .about-trigger:hover .about-portrait {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .about-trigger:hover:not(:focus-visible) .about-portrait {
+    transform: translateX(calc(-50% + var(--portrait-offset, 0px)))
+      rotate(var(--portrait-tilt, 0deg));
+  }
+}
+
 .profile-links {
   @apply text-label-sm;
   display: flex;

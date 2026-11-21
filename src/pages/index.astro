@@ -1,7 +1,17 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import '@phosphor-icons/web/regular';
 import '@/styles/portfolio.css';
+
+const [profilePhoto] = Object.values(
+  import.meta.glob<ImageMetadata>('/src/assets/jose-basanta-profile.{jpg,jpeg,png,webp}', {
+    eager: true,
+    import: 'default',
+  }),
+);
+
 const projects = [
   {
     id: 'nimbus',
@@ -86,8 +96,13 @@ const columns = [
           design and build.
         </p>
         <div class="profile-actions">
-          <button type="button" data-open="about-dialog">
+          <button type="button" class="about-trigger" data-open="about-dialog">
             About me
+            {profilePhoto && (
+              <span class="about-portrait" aria-hidden="true">
+                <Image src={profilePhoto} alt="" width={224} height={224} fit="cover" />
+              </span>
+            )}
           </button>
           <button type="button" class="contact-button" data-open="contact-dialog">
             Get in touch <i class="ph ph-envelope-simple" aria-hidden="true"></i>
@@ -98,7 +113,11 @@ const columns = [
         <a href="https://x.com/joseebasanta" target="_blank" rel="noopener">
           X / Twitter <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
         </a>
-        <a href="https://www.linkedin.com/in/jose-basanta-544052211/" target="_blank" rel="noopener">
+        <a
+          href="https://www.linkedin.com/in/jose-basanta-544052211/"
+          target="_blank"
+          rel="noopener"
+        >
           LinkedIn <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
         </a>
         <a href="https://github.com/joseebasanta" target="_blank" rel="noopener">
@@ -233,6 +252,18 @@ const columns = [
 </BaseLayout>
 <script>
   import { trackPortfolioEvent } from '@/analytics/mixpanel';
+
+  const aboutTrigger = document.querySelector<HTMLButtonElement>(
+    '.about-trigger:has(.about-portrait)',
+  );
+  aboutTrigger?.addEventListener('pointermove', (event) => {
+    if (event.pointerType !== 'mouse') return;
+    const bounds = aboutTrigger.getBoundingClientRect();
+    const position = (event.clientX - bounds.left) / bounds.width;
+    const offset = Math.max(-1, Math.min(1, position * 2 - 1));
+    aboutTrigger.style.setProperty('--portrait-offset', `${offset * 12}px`);
+    aboutTrigger.style.setProperty('--portrait-tilt', `${offset * 7}deg`);
+  });
 
   const openDialog = (id: string) => {
     const dialog = document.getElementById(id);
