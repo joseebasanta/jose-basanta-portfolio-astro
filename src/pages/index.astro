@@ -53,6 +53,7 @@ type Project = {
   kind: string;
   summary: string;
   detail: string;
+  overview?: string;
   discipline: string;
   tools?: (keyof typeof toolLogos)[];
   artwork?: Artwork[];
@@ -122,6 +123,8 @@ const projects: Project[] = [
     kind: 'Artwork',
     summary: kamigotchiDescription,
     detail: kamigotchiDescription,
+    overview:
+      'Working alongside the existing pixel-art direction, I focused on graphic design and animation—creating visuals that help communicate the game’s identity across digital platforms and community-facing spaces.',
     discipline: 'Graphic design',
     tools: ['Figma', 'Midjourney', 'Adobe After Effects', 'Adobe Illustrator', 'Adobe Photoshop'],
     artwork: [
@@ -220,6 +223,12 @@ const projects: Project[] = [
 ];
 const visualProjects = projects.filter((project) => project.views.includes('visual-craft'));
 const workProjects = projects.filter((project) => !project.views.includes('visual-craft'));
+const visualProjectImageOptions = {
+  class: 'visual-project-artwork',
+  widths: [400, 800, 1200, 1600],
+  sizes: '(max-width: 740px) calc(100vw - 32px), (max-width: 1647px) 65vw, 1056px',
+  quality: 'high' as const,
+};
 const filters = [
   { id: 'work', label: 'Selected work' },
   { id: 'visual-craft', label: 'Visual craft' },
@@ -384,20 +393,21 @@ const columns = [
           )}
         </header>
         <section class="visual-project-scroll" aria-label="Project details" tabindex="0">
-          {p.artwork?.map(({ image, alt }, index) => (
-            <>
-              <Image
-                class="visual-project-artwork"
-                src={image}
-                alt={alt}
-                widths={[400, 800, 1200, 1600]}
-                sizes="(max-width: 740px) calc(100vw - 32px), (max-width: 1647px) 65vw, 1056px"
-                quality="high"
-              />
-              {index === 0 && <p class="visual-project-description">{p.detail}</p>}
-            </>
+          {p.artwork?.[0] && (
+            <Image {...visualProjectImageOptions} src={p.artwork[0].image} alt={p.artwork[0].alt} />
+          )}
+          <p class:list={['visual-project-description', { 'visual-project-lead': p.overview }]}>
+            {p.detail}
+          </p>
+          {p.overview && (
+            <section class="visual-project-overview" aria-labelledby={`overview-${p.id}`}>
+              <h3 class="eyebrow" id={`overview-${p.id}`}>Overview</h3>
+              <p>{p.overview}</p>
+            </section>
+          )}
+          {p.artwork?.slice(1).map(({ image, alt }) => (
+            <Image {...visualProjectImageOptions} src={image} alt={alt} />
           ))}
-          {!p.artwork?.length && <p class="visual-project-description">{p.detail}</p>}
         </section>
       </div>
     </dialog>

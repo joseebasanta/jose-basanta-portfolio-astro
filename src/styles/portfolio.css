@@ -545,6 +545,29 @@
   color: var(--color-muted-foreground);
 }
 
+.visual-project-lead {
+  @apply text-paragraph-xl;
+  max-width: none;
+  margin-block: 8px 4px;
+  color: var(--color-foreground);
+}
+
+.visual-project-overview {
+  display: grid;
+  gap: 12px;
+  padding-block: 20px 12px;
+  border-block-start: 1px solid var(--color-border);
+}
+
+.visual-project-overview .eyebrow {
+  @apply text-subheading-sm;
+}
+
+.visual-project-overview p {
+  @apply text-paragraph-lg;
+  max-width: 72ch;
+}
+
 @media (max-width: 740px) {
   .visual-project-panel {
     --panel-padding: 16px;
@@ -566,6 +589,14 @@
 
   .visual-project-header h2 {
     @apply text-title-h4;
+  }
+
+  .visual-project-lead {
+    @apply text-paragraph-lg;
+  }
+
+  .visual-project-overview p {
+    @apply text-paragraph-md;
   }
 }
 
