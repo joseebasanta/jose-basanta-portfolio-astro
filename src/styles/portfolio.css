@@ -455,7 +455,6 @@
 
 .visual-project-panel {
   --panel-padding: clamp(20px, 3vw, 40px);
-  --panel-slide-distance: calc(100% + 56px);
   position: absolute;
   inset: 0 0 0 auto;
   display: flex;
@@ -466,18 +465,40 @@
   background: var(--color-surface);
 }
 
-.visual-project-panel > .close-button {
-  top: 16px;
-  right: calc(100% + 12px);
+.visual-project-close {
+  position: static;
+  width: 44px;
+  height: 44px;
+  margin-inline-start: -10px;
+  margin-block-end: 8px;
+  border: 0;
+  background: transparent;
 }
 
 .visual-project-header {
-  padding: 24px var(--panel-padding) 20px;
+  padding: max(16px, env(safe-area-inset-top)) var(--panel-padding) 20px;
 }
 
 .visual-project-header h2 {
   @apply text-title-h3;
   margin-block-start: 6px;
+}
+
+.visual-project-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-block-start: 12px;
+}
+
+.visual-project-tools li {
+  @apply text-label-xs;
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface-strong);
+  overflow-wrap: anywhere;
 }
 
 .visual-project-scroll {
@@ -517,20 +538,9 @@
 @media (max-width: 740px) {
   .visual-project-panel {
     --panel-padding: 16px;
-    --panel-slide-distance: 100%;
     width: 100%;
     border: 0;
     border-radius: 0;
-  }
-
-  .visual-project-panel > .close-button {
-    top: max(16px, env(safe-area-inset-top));
-    right: 16px;
-  }
-
-  .visual-project-header {
-    padding-block-start: max(24px, env(safe-area-inset-top));
-    padding-inline-end: 68px;
   }
 
   .visual-project-header h2 {
@@ -550,7 +560,7 @@
   }
 
   .visual-project-dialog[data-closing] .visual-project-panel {
-    transform: translateX(var(--panel-slide-distance));
+    transform: translateX(100%);
   }
 
   .visual-project-dialog[data-closing]::backdrop {
@@ -559,7 +569,7 @@
 
   @starting-style {
     .visual-project-dialog[open] .visual-project-panel {
-      transform: translateX(var(--panel-slide-distance));
+      transform: translateX(100%);
     }
 
     .visual-project-dialog[open]::backdrop {

@@ -15,6 +15,7 @@ const ethSalvadorDescription =
   'Conceptualized and executed the event brand identity for ETH Salvador 2024.';
 const invisibleGardenDescription =
   'Visual identity development, event branding, web design, on-site production materials, and video editing created for the Invisible Garden program.';
+const illustrationDescription = 'A selection of my illustrations.';
 
 const [profilePhoto] = Object.values(
   import.meta.glob<ImageMetadata>('/src/assets/jose-basanta-profile.{jpg,jpeg,png,webp}', {
@@ -34,6 +35,7 @@ type Project = {
   summary: string;
   detail: string;
   discipline: string;
+  tools?: string[];
   artwork?: Artwork[];
 };
 
@@ -102,6 +104,7 @@ const projects: Project[] = [
     summary: kamigotchiDescription,
     detail: kamigotchiDescription,
     discipline: 'Graphic design',
+    tools: ['Figma', 'Midjourney', 'Adobe After Effects', 'Adobe Illustrator', 'Adobe Photoshop'],
     artwork: [
       {
         image: championsArtwork,
@@ -118,6 +121,7 @@ const projects: Project[] = [
     summary: ethSalvadorDescription,
     detail: ethSalvadorDescription,
     discipline: 'Event branding',
+    tools: ['Midjourney', 'Adobe Photoshop', 'Adobe Illustrator', 'Adobe After Effects'],
     artwork: [
       {
         image: ethSalvadorArtwork,
@@ -134,12 +138,30 @@ const projects: Project[] = [
     summary: invisibleGardenDescription,
     detail: invisibleGardenDescription,
     discipline: 'Event branding · Web design',
+    tools: [
+      'Webflow',
+      'Figma',
+      'Adobe Illustrator',
+      'Adobe Photoshop',
+      'Adobe After Effects',
+      'Midjourney',
+    ],
     artwork: [
       {
         image: invisibleGardenArtwork,
         alt: 'The green and purple Invisible Garden wordmark over an illustrated landscape with trees and an obelisk.',
       },
     ],
+  },
+  {
+    id: 'illustrations',
+    views: ['visual-craft'],
+    shape: 'wide',
+    title: 'Illustrations',
+    kind: 'Collection',
+    summary: illustrationDescription,
+    detail: illustrationDescription,
+    discipline: 'Illustration',
   },
 ];
 const visualProjects = projects.filter((project) => project.views.includes('visual-craft'));
@@ -150,7 +172,7 @@ const filters = [
 ];
 const columns = [
   [projects[5], projects[7], projects[0], projects[2], projects[4]],
-  [projects[6], projects[1], projects[3]],
+  [projects[6], projects[8], projects[1], projects[3]],
 ];
 ---
 
@@ -279,12 +301,23 @@ const columns = [
       aria-labelledby={`title-${p.id}`}
     >
       <div class="visual-project-panel">
-        <button type="button" class="close-button" data-close aria-label="Close project" autofocus>
-          <i class="ph ph-x" aria-hidden="true"></i>
-        </button>
         <header class="visual-project-header">
+          <button
+            type="button"
+            class="close-button visual-project-close"
+            data-close
+            aria-label="Close project"
+            autofocus
+          >
+            <i class="ph ph-x" aria-hidden="true"></i>
+          </button>
           <p class="eyebrow">{p.discipline}</p>
           <h2 id={`title-${p.id}`}>{p.title}</h2>
+          {p.tools && p.tools.length > 0 && (
+            <ul class="visual-project-tools" role="list" aria-label="Tools used">
+              {p.tools.map((tool) => <li>{tool}</li>)}
+            </ul>
+          )}
         </header>
         <section class="visual-project-scroll" aria-label="Project details" tabindex="0">
           {p.artwork?.map(({ image, alt }) => (
