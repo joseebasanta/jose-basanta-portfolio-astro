@@ -1,6 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import collective2077Cover from '@/assets/collective-2077-cover.png';
+import collective2077BrandGraphics from '@/assets/collective-2077/01-brand-graphics.png';
+import collective2077Editorial from '@/assets/collective-2077/02-editorial-illustrations.png';
+import collective2077Roadmaps from '@/assets/collective-2077/03-alpha-roadmaps.png';
+import collective2077BridgeGraphics from '@/assets/collective-2077/04-bridge-infographics.png';
+import collective2077EthereumBanners from '@/assets/collective-2077/05-ethereum-banners.png';
 import championsArtwork from '@/assets/community-champions.png';
 import ethSalvadorArtwork from '@/assets/eth-salvador.png';
 import illustrationsCover from '@/assets/illustrations-cover.png';
@@ -24,6 +30,8 @@ const ethSalvadorDescription =
 const invisibleGardenDescription =
   'Visual identity development, event branding, web design, on-site production materials, and video editing created for the Invisible Garden program.';
 const illustrationDescription = 'A selection of my illustrations.';
+const collective2077Description =
+  'Created branding assets, editorial graphics, and marketing visuals for a Web3 research group.';
 
 const [profilePhoto] = Object.values(
   import.meta.glob<ImageMetadata>('/src/assets/jose-basanta-profile.{jpg,jpeg,png,webp}', {
@@ -220,6 +228,43 @@ const projects: Project[] = [
       },
     ],
   },
+  {
+    id: 'collective-2077',
+    views: ['visual-craft'],
+    shape: 'landscape',
+    title: 'Collective 2077',
+    kind: 'Visual identity',
+    summary: collective2077Description,
+    detail: 'Visual Identity & Graphic Design for Collective 2077',
+    overview: collective2077Description,
+    discipline: 'Visual identity · Graphic design',
+    artwork: [
+      {
+        image: collective2077Cover,
+        alt: 'Glowing cyan cubes hover over a wireframe grid on a dark background with the 2077 Research logo.',
+      },
+      {
+        image: collective2077BrandGraphics,
+        alt: 'Four 2077 Research graphics featuring teal isometric cubes, Ethereum motifs, and a white emblem.',
+      },
+      {
+        image: collective2077Editorial,
+        alt: 'Four dark editorial illustrations featuring white emblems, glowing blue rings, and a chain.',
+      },
+      {
+        image: collective2077Roadmaps,
+        alt: 'Four Alpha Roadmap graphics for the EVM Query Language, including milestone timelines.',
+      },
+      {
+        image: collective2077BridgeGraphics,
+        alt: 'Four research graphics on bridge hacks, canonical rollup bridges, third-party bridges, and liquidity bridges.',
+      },
+      {
+        image: collective2077EthereumBanners,
+        alt: 'Two Ethereum banners about restaking and leadership in blockchains.',
+      },
+    ],
+  },
 ];
 const visualProjects = projects.filter((project) => project.views.includes('visual-craft'));
 const workProjects = projects.filter((project) => !project.views.includes('visual-craft'));
@@ -235,7 +280,7 @@ const filters = [
 ];
 const columns = [
   [projects[5], projects[7], projects[0], projects[2], projects[4]],
-  [projects[6], projects[8], projects[1], projects[3]],
+  [projects[6], projects[8], projects[9], projects[1], projects[3]],
 ];
 ---
 
