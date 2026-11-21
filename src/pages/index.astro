@@ -1,11 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import championsArtwork from '@/assets/community-champions.png';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import '@phosphor-icons/web/regular';
 import '@/styles/portfolio.css';
 
 const contactEmail = 'joseebasanta@gmail.com';
+const kamigotchiDescription =
+  'Graphic design and motion assets created for Kamigotchi, an on-chain idle MMORPG.';
 
 const [profilePhoto] = Object.values(
   import.meta.glob<ImageMetadata>('/src/assets/jose-basanta-profile.{jpg,jpeg,png,webp}', {
@@ -14,10 +17,23 @@ const [profilePhoto] = Object.values(
   }),
 );
 
-const projects = [
+type GalleryView = 'work' | 'visual-craft';
+type Project = {
+  id: string;
+  views: GalleryView[];
+  shape: string;
+  title: string;
+  kind: string;
+  summary: string;
+  detail: string;
+  discipline: string;
+  cover?: { image: ImageMetadata; alt: string };
+};
+
+const projects: Project[] = [
   {
     id: 'nimbus',
-    category: 'product-design',
+    views: ['work'],
     shape: 'tall',
     title: 'Nimbus',
     kind: 'Concept',
@@ -28,7 +44,7 @@ const projects = [
   },
   {
     id: 'elsewhere',
-    category: 'visual-craft',
+    views: ['work', 'visual-craft'],
     shape: 'wide',
     title: 'Elsewhere',
     kind: 'Concept',
@@ -39,7 +55,7 @@ const projects = [
   },
   {
     id: 'variable-type',
-    category: 'visual-craft',
+    views: ['work'],
     shape: 'square',
     title: 'Variable Type',
     kind: 'Experiment',
@@ -50,7 +66,7 @@ const projects = [
   },
   {
     id: 'field',
-    category: 'product-design',
+    views: ['work'],
     shape: 'wide',
     title: 'Field',
     kind: 'Concept',
@@ -61,7 +77,7 @@ const projects = [
   },
   {
     id: 'orbit',
-    category: 'product-design',
+    views: ['work'],
     shape: 'tall',
     title: 'Orbit',
     kind: 'Concept',
@@ -70,13 +86,27 @@ const projects = [
       'An independent music-app concept exploring a more expressive listening experience. Dark surfaces, bold artwork, and a focused library put the music first.',
     discipline: 'Product design · Visual exploration',
   },
+  {
+    id: 'kamigotchi',
+    views: ['visual-craft'],
+    shape: 'landscape',
+    title: 'Kamigotchi',
+    kind: 'Artwork',
+    summary: kamigotchiDescription,
+    detail: kamigotchiDescription,
+    discipline: 'Graphic design',
+    cover: {
+      image: championsArtwork,
+      alt: 'Kamigotchi World Community Champions poster with a pixel-art trophy and colorful characters against a yellow sunburst.',
+    },
+  },
 ];
 const filters = [
   { id: 'work', label: 'Selected work' },
   { id: 'visual-craft', label: 'Visual craft' },
 ];
 const columns = [
-  [projects[0], projects[2], projects[4]],
+  [projects[5], projects[0], projects[2], projects[4]],
   [projects[1], projects[3]],
 ];
 ---
@@ -166,10 +196,21 @@ const columns = [
                 type="button"
                 class:list={['project-card', project.shape]}
                 data-project={project.id}
-                data-category={project.category}
+                data-gallery-views={project.views.join(' ')}
+                hidden={!project.views.includes('work')}
                 aria-label={`Explore ${project.title} — ${project.kind}`}
                 aria-describedby={`summary-${project.id}`}
               >
+                {project.cover && (
+                  <Image
+                    class="project-image"
+                    src={project.cover.image}
+                    alt=""
+                    widths={[360, 720, 1080, 1440]}
+                    sizes="(max-width: 480px) calc(100vw - 32px), (max-width: 740px) 50vw, 37vw"
+                    quality="high"
+                  />
+                )}
                 <span class="project-caption">
                   <span class="project-name">{project.title}</span>
                   <span class="project-summary">
@@ -196,7 +237,18 @@ const columns = [
       <button class="close-button" data-close aria-label="Close project">
         <i class="ph ph-x" aria-hidden="true"></i>
       </button>
-      <div class="dialog-cover" aria-hidden="true"></div>
+      {p.cover ? (
+        <Image
+          class="dialog-artwork"
+          src={p.cover.image}
+          alt={p.cover.alt}
+          widths={[400, 800, 1600]}
+          sizes="(max-width: 836px) calc(100vw - 36px), 800px"
+          quality="high"
+        />
+      ) : (
+        <div class="dialog-cover" aria-hidden="true"></div>
+      )}
       <div class="dialog-content">
         <span class="eyebrow">{p.discipline}</span>
         <h2 id={`title-${p.id}`}>
@@ -221,7 +273,7 @@ const columns = [
             <input id="type-weight" type="range" min="100" max="900" step="1" value="500" />
           </div>
         )}
-        <p class="concept-note">An independent design exploration.</p>
+        {p.views.includes('work') && <p class="concept-note">An independent design exploration.</p>}
       </div>
     </dialog>
   ))}
@@ -330,7 +382,7 @@ const columns = [
     });
   });
   const filters = [...document.querySelectorAll<HTMLAnchorElement>('[data-view]')];
-  const cards = document.querySelectorAll<HTMLButtonElement>('[data-category]');
+  const cards = document.querySelectorAll<HTMLButtonElement>('[data-gallery-views]');
 
   const applyFilter = () => {
     const hash = location.hash.slice(1);
@@ -338,7 +390,7 @@ const columns = [
     const active = filters.some((link) => link.dataset.view === requested) ? requested : 'work';
 
     cards.forEach((card) => {
-      card.hidden = active !== 'work' && card.dataset.category !== active;
+      card.hidden = !card.dataset.galleryViews?.split(' ').includes(active);
     });
     filters.forEach((link) => {
       if (link.dataset.view === active) link.setAttribute('aria-current', 'true');

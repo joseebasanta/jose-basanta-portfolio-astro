@@ -297,6 +297,16 @@
   background: var(--color-gray-700);
 }
 
+.project-card.landscape {
+  aspect-ratio: auto;
+}
+
+.project-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .project-card:hover {
   border-color: var(--color-gray-500);
 }
@@ -324,6 +334,12 @@
 
 .project-summary-track > [aria-hidden] {
   display: none;
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 740px) {
+  .project-image + .project-caption {
+    position: static;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) and (min-width: 741px) {
@@ -416,6 +432,11 @@
   width: 100%;
   height: min(45vh, 400px);
   background: var(--color-surface-strong);
+}
+.dialog-artwork {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .dialog-content {
   padding: 32px;
