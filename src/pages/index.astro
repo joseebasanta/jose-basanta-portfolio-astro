@@ -24,6 +24,7 @@ const [profilePhoto] = Object.values(
 );
 
 type GalleryView = 'work' | 'visual-craft';
+type Artwork = { image: ImageMetadata; alt: string };
 type Project = {
   id: string;
   views: GalleryView[];
@@ -33,7 +34,7 @@ type Project = {
   summary: string;
   detail: string;
   discipline: string;
-  cover?: { image: ImageMetadata; alt: string };
+  artwork?: Artwork[];
 };
 
 const projects: Project[] = [
@@ -101,10 +102,12 @@ const projects: Project[] = [
     summary: kamigotchiDescription,
     detail: kamigotchiDescription,
     discipline: 'Graphic design',
-    cover: {
-      image: championsArtwork,
-      alt: 'Kamigotchi World Community Champions poster with a pixel-art trophy and colorful characters against a yellow sunburst.',
-    },
+    artwork: [
+      {
+        image: championsArtwork,
+        alt: 'Kamigotchi World Community Champions poster with a pixel-art trophy and colorful characters against a yellow sunburst.',
+      },
+    ],
   },
   {
     id: 'eth-salvador',
@@ -115,10 +118,12 @@ const projects: Project[] = [
     summary: ethSalvadorDescription,
     detail: ethSalvadorDescription,
     discipline: 'Event branding',
-    cover: {
-      image: ethSalvadorArtwork,
-      alt: 'ETH Salvador 2024 poster with an Ethereum emblem above a volcanic landscape at sunset.',
-    },
+    artwork: [
+      {
+        image: ethSalvadorArtwork,
+        alt: 'ETH Salvador 2024 poster with an Ethereum emblem above a volcanic landscape at sunset.',
+      },
+    ],
   },
   {
     id: 'invisible-garden',
@@ -129,12 +134,16 @@ const projects: Project[] = [
     summary: invisibleGardenDescription,
     detail: invisibleGardenDescription,
     discipline: 'Event branding · Web design',
-    cover: {
-      image: invisibleGardenArtwork,
-      alt: 'The green and purple Invisible Garden wordmark over an illustrated landscape with trees and an obelisk.',
-    },
+    artwork: [
+      {
+        image: invisibleGardenArtwork,
+        alt: 'The green and purple Invisible Garden wordmark over an illustrated landscape with trees and an obelisk.',
+      },
+    ],
   },
 ];
+const visualProjects = projects.filter((project) => project.views.includes('visual-craft'));
+const workProjects = projects.filter((project) => !project.views.includes('visual-craft'));
 const filters = [
   { id: 'work', label: 'Selected work' },
   { id: 'visual-craft', label: 'Visual craft' },
@@ -234,11 +243,12 @@ const columns = [
                 hidden={!project.views.includes('work')}
                 aria-label={`Explore ${project.title} — ${project.kind}`}
                 aria-describedby={`summary-${project.id}`}
+                aria-haspopup="dialog"
               >
-                {project.cover && (
+                {project.artwork?.[0] && (
                   <Image
                     class="project-image"
-                    src={project.cover.image}
+                    src={project.artwork[0].image}
                     alt=""
                     widths={[360, 720, 1080, 1440]}
                     sizes="(max-width: 480px) calc(100vw - 32px), (max-width: 740px) 50vw, 37vw"
@@ -262,7 +272,37 @@ const columns = [
       </div>
     </section>
   </main>
-  {projects.map((p) => (
+  {visualProjects.map((p) => (
+    <dialog
+      class="visual-project-dialog"
+      id={`project-${p.id}`}
+      aria-labelledby={`title-${p.id}`}
+    >
+      <div class="visual-project-panel">
+        <button type="button" class="close-button" data-close aria-label="Close project" autofocus>
+          <i class="ph ph-x" aria-hidden="true"></i>
+        </button>
+        <header class="visual-project-header">
+          <p class="eyebrow">{p.discipline}</p>
+          <h2 id={`title-${p.id}`}>{p.title}</h2>
+        </header>
+        <section class="visual-project-scroll" aria-label="Project details" tabindex="0">
+          {p.artwork?.map(({ image, alt }) => (
+            <Image
+              class="visual-project-artwork"
+              src={image}
+              alt={alt}
+              widths={[400, 800, 1200, 1600]}
+              sizes="(max-width: 740px) calc(100vw - 32px), (max-width: 1647px) 65vw, 1056px"
+              quality="high"
+            />
+          ))}
+          <p class="visual-project-description">{p.detail}</p>
+        </section>
+      </div>
+    </dialog>
+  ))}
+  {workProjects.map((p) => (
     <dialog
       class="studio-dialog project-dialog"
       id={`project-${p.id}`}
@@ -271,11 +311,11 @@ const columns = [
       <button class="close-button" data-close aria-label="Close project">
         <i class="ph ph-x" aria-hidden="true"></i>
       </button>
-      {p.cover ? (
+      {p.artwork?.[0] ? (
         <Image
           class="dialog-artwork"
-          src={p.cover.image}
-          alt={p.cover.alt}
+          src={p.artwork[0].image}
+          alt={p.artwork[0].alt}
           widths={[400, 800, 1600]}
           sizes="(max-width: 836px) calc(100vw - 36px), 800px"
           quality="high"
@@ -307,7 +347,7 @@ const columns = [
             <input id="type-weight" type="range" min="100" max="900" step="1" value="500" />
           </div>
         )}
-        {p.views.includes('work') && <p class="concept-note">An independent design exploration.</p>}
+        <p class="concept-note">An independent design exploration.</p>
       </div>
     </dialog>
   ))}
@@ -377,12 +417,33 @@ const columns = [
     });
   }
 
-  const openDialog = (id: string) => {
+  const dialogTriggers = new WeakMap<HTMLDialogElement, HTMLButtonElement>();
+
+  const openDialog = (id: string, trigger?: HTMLButtonElement) => {
     const dialog = document.getElementById(id);
-    if (!(dialog instanceof HTMLDialogElement)) return;
+    if (!(dialog instanceof HTMLDialogElement) || dialog.open) return;
     document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach((item) => item.close());
+    dialog.removeAttribute('data-closing');
+    if (trigger && dialog.classList.contains('visual-project-dialog')) {
+      dialogTriggers.set(dialog, trigger);
+    }
     dialog.showModal();
     document.documentElement.classList.add('dialog-open');
+    const scrollArea = dialog.querySelector('.visual-project-scroll');
+    if (scrollArea) scrollArea.scrollTop = 0;
+  };
+
+  const closeDialog = async (dialog: HTMLDialogElement) => {
+    if (!dialog.open || dialog.hasAttribute('data-closing')) return;
+
+    const panel = dialog.querySelector('.visual-project-panel');
+    if (panel) {
+      dialog.setAttribute('data-closing', '');
+      await Promise.allSettled(panel.getAnimations().map((animation) => animation.finished));
+      if (!dialog.hasAttribute('data-closing')) return;
+    }
+
+    dialog.close();
   };
   document.querySelectorAll<HTMLButtonElement>('[data-open]').forEach((button) => {
     button.addEventListener('click', () => openDialog(button.dataset.open!));
@@ -391,28 +452,39 @@ const columns = [
     button.addEventListener('click', () => {
       const project = button.dataset.project;
       if (!project) return;
-      openDialog(`project-${project}`);
+      openDialog(`project-${project}`, button);
       trackPortfolioEvent('Project Opened', { project_id: project });
     });
   });
   document.querySelectorAll<HTMLDialogElement>('dialog').forEach((dialog) => {
     dialog
       .querySelectorAll('[data-close]')
-      .forEach((button) => button.addEventListener('click', () => dialog.close()));
+      .forEach((button) => button.addEventListener('click', () => void closeDialog(dialog)));
+    if (dialog.classList.contains('visual-project-dialog')) {
+      dialog.addEventListener('cancel', (event) => {
+        event.preventDefault();
+        void closeDialog(dialog);
+      });
+    }
     dialog.addEventListener('click', (event) => {
-      const box = dialog.getBoundingClientRect();
+      if (event.target !== dialog) return;
+      const panel = dialog.querySelector('.visual-project-panel') ?? dialog;
+      const box = panel.getBoundingClientRect();
       if (
-        event.target === dialog &&
-        (event.clientX < box.left ||
-          event.clientX > box.right ||
-          event.clientY < box.top ||
-          event.clientY > box.bottom)
-      )
-        dialog.close();
+        event.clientX < box.left ||
+        event.clientX > box.right ||
+        event.clientY < box.top ||
+        event.clientY > box.bottom
+      ) {
+        void closeDialog(dialog);
+      }
     });
     dialog.addEventListener('close', () => {
-      if (!document.querySelector('dialog[open]'))
-        document.documentElement.classList.remove('dialog-open');
+      if (dialog.open) return;
+      dialog.removeAttribute('data-closing');
+      if (document.querySelector('dialog[open]')) return;
+      document.documentElement.classList.remove('dialog-open');
+      dialogTriggers.get(dialog)?.focus({ preventScroll: true });
     });
   });
   const filters = [...document.querySelectorAll<HTMLAnchorElement>('[data-view]')];
