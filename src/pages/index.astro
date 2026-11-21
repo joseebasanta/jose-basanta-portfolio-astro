@@ -9,6 +9,7 @@ const projects = [
     shape: 'tall',
     title: 'Nimbus',
     kind: 'Concept',
+    summary: 'A calmer way to see your money at a glance.',
     detail:
       'An exploration of a calmer way to see your money. A clear overview, thoughtful hierarchy, and a little breathing room turn everyday finances into something more approachable.',
     discipline: 'Product design · Interface design',
@@ -19,6 +20,7 @@ const projects = [
     shape: 'wide',
     title: 'Elsewhere',
     kind: 'Concept',
+    summary: 'A travel editorial for taking the scenic route.',
     detail:
       'A travel editorial concept for taking the scenic route. Warm photography and expressive typography make room for places, stories, and the joy of discovering somewhere new.',
     discipline: 'Web design · Art direction',
@@ -29,6 +31,7 @@ const projects = [
     shape: 'square',
     title: 'Variable Type',
     kind: 'Experiment',
+    summary: 'An interactive study in how type changes character.',
     detail:
       'A small experiment in the expressive side of typography. Move the slider below and see how a single letterform changes character.',
     discipline: 'Typography · Interaction',
@@ -39,6 +42,7 @@ const projects = [
     shape: 'wide',
     title: 'Field',
     kind: 'Concept',
+    summary: 'A quieter workspace for planning one day at a time.',
     detail:
       'A productivity concept built around a quieter day. Simple lists, gentle color, and a focused workspace help make the next step feel clear.',
     discipline: 'Product design · Interaction',
@@ -49,6 +53,7 @@ const projects = [
     shape: 'tall',
     title: 'Orbit',
     kind: 'Concept',
+    summary: 'A music player concept that puts the artwork first.',
     detail:
       'An independent music-app concept exploring a more expressive listening experience. Dark surfaces, bold artwork, and a focused library put the music first.',
     discipline: 'Product design · Visual exploration',
@@ -105,7 +110,13 @@ const columns = [
       </nav>
     </aside>
 
-    <section class="work-section" id="gallery" aria-label="Projects and experiments" tabindex="-1">
+    <section
+      class="work-section"
+      id="gallery"
+      data-active-view="work"
+      aria-label="Projects and experiments"
+      tabindex="-1"
+    >
       <nav class="gallery-nav" aria-label="Filter projects">
         {filters.map((filter, index) => (
           <a
@@ -127,11 +138,19 @@ const columns = [
                 data-project={project.id}
                 data-category={project.category}
                 aria-label={`Explore ${project.title} — ${project.kind}`}
+                aria-describedby={`summary-${project.id}`}
               >
                 <span class="project-caption">
                   <span class="project-name">{project.title}</span>
                   <span class="project-kind">{project.kind}</span>
                   <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+                  <span class="project-summary">
+                    <span class="project-summary-track">
+                      <span id={`summary-${project.id}`}>{project.summary}</span>
+                      <span aria-hidden="true">{project.summary}</span>
+                      <span aria-hidden="true">{project.summary}</span>
+                    </span>
+                  </span>
                 </span>
               </button>
             ))}
@@ -258,10 +277,12 @@ const columns = [
   });
   const filters = [...document.querySelectorAll<HTMLAnchorElement>('[data-view]')];
   const cards = document.querySelectorAll<HTMLButtonElement>('[data-category]');
+  const gallery = document.getElementById('gallery');
 
   const applyFilter = () => {
     const requested = location.hash.slice(1);
     const active = filters.some((link) => link.dataset.view === requested) ? requested : 'work';
+    gallery?.setAttribute('data-active-view', active);
 
     cards.forEach((card) => {
       card.hidden = active !== 'work' && card.dataset.category !== active;
