@@ -4,17 +4,49 @@
  * key below becomes a Tailwind utility automatically (e.g. `--color-accent`
  * -> `bg-accent`, `text-accent`, `border-accent`).
  */
-@theme {
-  /* Color */
-  --color-background: #0b0b0d;
-  --color-foreground: #f4f4f5;
-  --color-surface: #141417;
-  --color-surface-strong: #1c1c21;
-  --color-border: #27272e;
-  --color-muted-foreground: #9a9aa6;
-  --color-accent: #7c5cfc;
-  --color-accent-foreground: #0b0b0d;
-  --color-accent-secondary: #22d3ee;
+@theme static {
+  --color-*: initial;
+
+  /* Neutral / Gray · Figma 127:1257 */
+  --color-gray-0: #ffffff;
+  --color-gray-50: #f7f7f7;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #ebebeb;
+  --color-gray-300: #d1d1d1;
+  --color-gray-400: #a3a3a3;
+  --color-gray-500: #7b7b7b;
+  --color-gray-600: #5c5c5c;
+  --color-gray-700: #333333;
+  --color-gray-800: #262626;
+  --color-gray-900: #1c1c1c;
+  --color-gray-950: #171717;
+
+  /* Neutral / Slate · Figma 127:1298 */
+  --color-slate-0: #ffffff;
+  --color-slate-50: #f5f7fa;
+  --color-slate-100: #f2f5f8;
+  --color-slate-200: #e1e4ea;
+  --color-slate-300: #cacfd8;
+  --color-slate-400: #99a0ae;
+  --color-slate-500: #717784;
+  --color-slate-600: #525866;
+  --color-slate-700: #2b303b;
+  --color-slate-800: #222530;
+  --color-slate-900: #181b25;
+  --color-slate-950: #0e121b;
+
+  /* Interface roles */
+  --color-background: var(--color-gray-950);
+  --color-foreground: var(--color-gray-200);
+  --color-surface: var(--color-gray-900);
+  --color-surface-strong: var(--color-gray-800);
+  --color-surface-hover: var(--color-gray-700);
+  --color-border: var(--color-gray-700);
+  --color-muted-foreground: var(--color-gray-400);
+  --color-accent: var(--color-gray-200);
+  --color-accent-foreground: var(--color-gray-950);
+  --color-accent-secondary: var(--color-gray-300);
+  --color-focus: var(--color-gray-300);
 
   /* Scale from the design reference, using Geist. Small label and paragraph
      tracking stays neutral until the reference value can be read clearly. */

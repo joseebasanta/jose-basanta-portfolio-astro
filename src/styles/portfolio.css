@@ -1,14 +1,5 @@
 @reference './global.css';
 
-body:has(.studio-shell) {
-  --studio-ink: #efedf0;
-  --studio-muted: #a9a6ae;
-  --studio-surface: #252427;
-  --studio-accent: #c8b6fa;
-  background: #141315;
-  color: var(--studio-ink);
-}
-
 .studio-shell {
   display: grid;
   grid-template-columns: minmax(240px, 26%) minmax(0, 1fr);
@@ -36,7 +27,7 @@ body:has(.studio-shell) {
   @apply text-paragraph-md;
   max-width: 34ch;
   margin-top: 16px;
-  color: var(--studio-muted);
+  color: var(--color-muted-foreground);
 }
 
 .profile-actions {
@@ -53,21 +44,21 @@ body:has(.studio-shell) {
   gap: 8px;
   padding: 8px 16px;
   border-radius: 999px;
-  background: var(--studio-surface);
+  background: var(--color-surface);
   cursor: pointer;
 }
 
 .profile-actions .contact-button {
-  color: #1a1522;
-  background: #e9e1f7;
+  color: var(--color-accent-foreground);
+  background: var(--color-accent);
 }
 
 .profile-actions button:hover {
-  background: #38343d;
+  background: var(--color-surface-hover);
 }
 
 .profile-actions .contact-button:hover {
-  background: #f5edff;
+  background: var(--color-gray-50);
 }
 
 .about-trigger {
@@ -80,10 +71,10 @@ body:has(.studio-shell) {
   inset: auto auto calc(100% + 6px) 50%;
   inline-size: 112px;
   padding: 6px;
-  border: 1px solid #ffffff20;
+  border: 1px solid var(--color-border);
   border-radius: 10px;
-  background: var(--studio-surface);
-  box-shadow: 0 8px 20px #0006;
+  background: var(--color-surface);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-gray-950) 40%, transparent);
   opacity: 0;
   pointer-events: none;
   transform: translateX(-50%) translateY(8px) scale(0.94);
@@ -127,11 +118,11 @@ body:has(.studio-shell) {
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  color: var(--studio-muted);
+  color: var(--color-muted-foreground);
 }
 
 .profile-links a:hover {
-  color: var(--studio-ink);
+  color: var(--color-foreground);
 }
 
 .profile-links i {
@@ -152,17 +143,17 @@ body:has(.studio-shell) {
   display: inline-flex;
   align-items: center;
   min-height: 36px;
-  color: var(--studio-muted);
+  color: var(--color-muted-foreground);
   border-bottom: 2px solid transparent;
 }
 
 .gallery-nav a:hover,
 .gallery-nav a[aria-current] {
-  color: var(--studio-ink);
+  color: var(--color-foreground);
 }
 
 .gallery-nav a[aria-current] {
-  border-color: var(--studio-accent);
+  border-color: var(--color-accent);
 }
 
 .project-grid {
@@ -183,10 +174,10 @@ body:has(.studio-shell) {
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
-  border: 1px solid #ffffff08;
+  border: 1px solid var(--color-border);
   border-radius: 10px;
-  background: #2c2b2e;
-  color: var(--studio-ink);
+  background: var(--color-surface-strong);
+  color: var(--color-foreground);
   cursor: pointer;
   text-align: left;
 }
@@ -201,11 +192,11 @@ body:has(.studio-shell) {
 
 .project-card.wide {
   aspect-ratio: 4 / 3;
-  background: #343336;
+  background: var(--color-gray-700);
 }
 
 .project-card:hover {
-  border-color: #ffffff33;
+  border-color: var(--color-gray-500);
 }
 
 .project-caption {
@@ -217,7 +208,7 @@ body:has(.studio-shell) {
   inset: auto 12px 12px;
   padding: 10px 12px;
   border-radius: 7px;
-  background: #1d1b1f;
+  background: var(--color-surface);
 }
 
 .project-name {
@@ -228,13 +219,13 @@ body:has(.studio-shell) {
   @apply text-paragraph-xs;
   grid-column: 1;
   grid-row: 2;
-  color: var(--studio-muted);
+  color: var(--color-muted-foreground);
 }
 
 .project-caption i {
   grid-column: 2;
   grid-row: 1 / span 2;
-  color: var(--studio-accent);
+  color: var(--color-accent);
 }
 
 .project-summary,
@@ -248,7 +239,7 @@ body:has(.studio-shell) {
   inset: auto 0 0;
   padding: 8px 12px;
   border-radius: 0;
-  background: #151417;
+  background: var(--color-background);
 }
 
 [data-active-view='work'] .project-caption :is(.project-kind, i) {
@@ -258,7 +249,7 @@ body:has(.studio-shell) {
 [data-active-view='work'] .project-summary {
   @apply text-paragraph-xs;
   display: block;
-  color: var(--studio-muted);
+  color: var(--color-muted-foreground);
 }
 
 @media (hover: hover) and (pointer: fine) and (min-width: 741px) {
@@ -305,24 +296,24 @@ body:has(.studio-shell) {
 
 .project-tag {
   @apply text-label-xs;
-  color: var(--studio-muted);
+  color: var(--color-muted-foreground);
 }
 
 .studio-dialog {
   margin: auto;
-  border: 1px solid #3b3743;
+  border: 1px solid var(--color-border);
   border-radius: 23px;
-  color: var(--studio-ink);
-  background: #19181c;
+  color: var(--color-foreground);
+  background: var(--color-surface);
   padding: 0;
   max-height: 90dvh;
   width: min(800px, calc(100% - 36px));
   max-width: 800px;
-  box-shadow: 0 25px 100px #0008;
+  box-shadow: 0 25px 100px color-mix(in srgb, var(--color-gray-950) 55%, transparent);
   overscroll-behavior: contain;
 }
 .studio-dialog::backdrop {
-  background: #000b;
+  background: color-mix(in srgb, var(--color-gray-950) 70%, transparent);
   backdrop-filter: blur(8px);
 }
 .dialog-open {
@@ -340,23 +331,23 @@ body:has(.studio-shell) {
   place-items: center;
   font-size: 19px;
   cursor: pointer;
-  background: #19181dee;
-  color: #eee;
-  border: 1px solid #514c5a;
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  border: 1px solid var(--color-gray-600);
 }
 .close-button:hover {
-  background: #3d344a;
+  background: var(--color-surface-hover);
 }
 .dialog-cover {
   width: 100%;
   height: min(45vh, 400px);
-  background: #303033;
+  background: var(--color-surface-strong);
 }
 .dialog-content {
   padding: 32px;
 }
 .eyebrow {
-  color: #b2a2c7;
+  color: var(--color-accent-secondary);
   @apply text-subheading-xs;
   text-transform: uppercase;
   display: flex;
@@ -371,7 +362,7 @@ body:has(.studio-shell) {
   gap: 14px;
 }
 .dialog-content p {
-  color: #b0aeb9;
+  color: var(--color-muted-foreground);
   @apply text-paragraph-md;
   margin-bottom: 15px;
 }
@@ -391,8 +382,8 @@ body:has(.studio-shell) {
   justify-content: center;
   gap: 12px;
   align-items: center;
-  background: #393047;
-  color: #e2d4f8;
+  background: var(--color-surface-hover);
+  color: var(--color-accent);
   padding: 12px 18px;
   border-radius: 12px;
   cursor: pointer;
@@ -400,36 +391,36 @@ body:has(.studio-shell) {
   margin-top: 10px;
 }
 .primary-button:hover {
-  background: #493c5c;
+  background: var(--color-gray-600);
 }
 .dialog-icon {
   display: block;
-  color: #bba5df;
+  color: var(--color-accent-secondary);
   font-size: 36px;
   margin-bottom: 26px;
 }
 .type-demo {
   margin: 24px 0;
   border-radius: 15px;
-  background: #28222f;
+  background: var(--color-gray-900);
   padding: 23px;
 }
 .type-specimen {
   @apply text-title-h1;
   padding: 10px 0 25px;
-  color: #dbcef0;
+  color: var(--color-accent);
   overflow-wrap: anywhere;
 }
 .type-demo label {
   display: flex;
   justify-content: space-between;
   @apply text-label-sm;
-  color: #b7a9c8;
+  color: var(--color-muted-foreground);
 }
 .type-demo input {
   width: 100%;
   margin-top: 12px;
-  accent-color: #b99add;
+  accent-color: var(--color-accent);
   cursor: pointer;
 }
 .skip-link {
@@ -437,18 +428,14 @@ body:has(.studio-shell) {
   z-index: 10;
   left: 20px;
   top: -100px;
-  background: #252229;
-  color: #e0cafb;
+  background: var(--color-surface-strong);
+  color: var(--color-accent);
   padding: 12px 20px;
   border: 1px solid;
   border-radius: 8px;
 }
 .skip-link:focus {
   top: 15px;
-}
-body:has(.studio-shell) :is(a, button, input, [contenteditable]):focus-visible {
-  outline: 2px solid #bfa0ff;
-  outline-offset: 4px;
 }
 
 @media (max-width: 1000px) {

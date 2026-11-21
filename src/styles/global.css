@@ -7,11 +7,16 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans text-paragraph-md antialiased;
+    @apply bg-background text-foreground text-paragraph-md font-sans antialiased;
   }
 
   ::selection {
     @apply bg-accent text-accent-foreground;
+  }
+
+  :is(a, button, input, [contenteditable]):focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
   }
 
   /*
