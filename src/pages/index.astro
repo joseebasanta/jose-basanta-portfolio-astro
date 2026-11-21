@@ -5,6 +5,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import '@phosphor-icons/web/regular';
 import '@/styles/portfolio.css';
 
+const contactEmail = 'joseebasanta@gmail.com';
+
 const [profilePhoto] = Object.values(
   import.meta.glob<ImageMetadata>('/src/assets/jose-basanta-profile.{jpg,jpeg,png,webp}', {
     eager: true,
@@ -26,7 +28,7 @@ const projects = [
   },
   {
     id: 'elsewhere',
-    category: 'playground',
+    category: 'visual-craft',
     shape: 'wide',
     title: 'Elsewhere',
     kind: 'Concept',
@@ -37,7 +39,7 @@ const projects = [
   },
   {
     id: 'variable-type',
-    category: 'playground',
+    category: 'visual-craft',
     shape: 'square',
     title: 'Variable Type',
     kind: 'Experiment',
@@ -71,8 +73,7 @@ const projects = [
 ];
 const filters = [
   { id: 'work', label: 'Selected work' },
-  { id: 'product-design', label: 'Product design' },
-  { id: 'playground', label: 'Explorations' },
+  { id: 'visual-craft', label: 'Visual craft' },
 ];
 const columns = [
   [projects[0], projects[2], projects[4]],
@@ -104,9 +105,28 @@ const columns = [
               </span>
             )}
           </button>
-          <button type="button" class="contact-button" data-open="contact-dialog">
-            Get in touch <i class="ph ph-envelope-simple" aria-hidden="true"></i>
+          <button
+            type="button"
+            class="contact-button"
+            aria-label="Get in touch (copy email address)"
+            aria-describedby="contact-email"
+          >
+            <span class="contact-message" aria-hidden="true">
+              Get in touch
+              <span class="contact-icon">
+                <i class="ph ph-envelope-simple"></i>
+                <i class="ph ph-copy"></i>
+              </span>
+            </span>
+            <span class="contact-confirmation" aria-hidden="true">
+              Email copied <i class="ph ph-check"></i>
+            </span>
+            <span class="contact-preview" id="contact-email">{contactEmail}</span>
           </button>
+          <p class="contact-fallback" hidden>
+            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          </p>
+          <span class="sr-only" id="contact-status" role="status"></span>
         </div>
       </div>
       <nav class="profile-links" aria-label="More from Jose">
@@ -126,13 +146,7 @@ const columns = [
       </nav>
     </aside>
 
-    <section
-      class="work-section"
-      id="gallery"
-      data-active-view="work"
-      aria-label="Projects and experiments"
-      tabindex="-1"
-    >
+    <section class="work-section" id="gallery" aria-label="Projects and experiments" tabindex="-1">
       <nav class="gallery-nav" aria-label="Filter projects">
         {filters.map((filter, index) => (
           <a
@@ -158,8 +172,6 @@ const columns = [
               >
                 <span class="project-caption">
                   <span class="project-name">{project.title}</span>
-                  <span class="project-kind">{project.kind}</span>
-                  <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
                   <span class="project-summary">
                     <span class="project-summary-track">
                       <span id={`summary-${project.id}`}>{project.summary}</span>
@@ -232,38 +244,52 @@ const columns = [
       </button>
     </div>
   </dialog>
-  <dialog class="studio-dialog small-dialog" id="contact-dialog" aria-labelledby="contact-title">
-    <button class="close-button" data-close aria-label="Close contact">
-      <i class="ph ph-x" aria-hidden="true"></i>
-    </button>
-    <div class="dialog-content">
-      <i class="ph ph-paper-plane-tilt dialog-icon" aria-hidden="true"></i>
-      <span class="eyebrow">Say hello</span>
-      <h2 id="contact-title">Good things start with a conversation.</h2>
-      <p>
-        Contact details are coming soon. In the meantime, take a look around — there's plenty to
-        explore.
-      </p>
-      <button class="primary-button" data-close>
-        Back to exploring <i class="ph ph-arrow-right" aria-hidden="true"></i>
-      </button>
-    </div>
-  </dialog>
 </BaseLayout>
 <script>
   import { trackPortfolioEvent } from '@/analytics/mixpanel';
 
-  const aboutTrigger = document.querySelector<HTMLButtonElement>(
-    '.about-trigger:has(.about-portrait)',
+  const previewButtons = document.querySelectorAll<HTMLButtonElement>(
+    '.about-trigger:has(.about-portrait), .contact-button',
   );
-  aboutTrigger?.addEventListener('pointermove', (event) => {
-    if (event.pointerType !== 'mouse') return;
-    const bounds = aboutTrigger.getBoundingClientRect();
-    const position = (event.clientX - bounds.left) / bounds.width;
-    const offset = Math.max(-1, Math.min(1, position * 2 - 1));
-    aboutTrigger.style.setProperty('--portrait-offset', `${offset * 12}px`);
-    aboutTrigger.style.setProperty('--portrait-tilt', `${offset * 7}deg`);
+  previewButtons.forEach((button) => {
+    button.addEventListener('pointermove', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      const bounds = button.getBoundingClientRect();
+      const position = (event.clientX - bounds.left) / bounds.width;
+      const offset = Math.max(-1, Math.min(1, position * 2 - 1));
+      button.style.setProperty('--preview-offset', `${offset * 12}px`);
+      button.style.setProperty('--preview-tilt', `${offset * 7}deg`);
+    });
   });
+
+  const contactButton = document.querySelector<HTMLButtonElement>('.contact-button');
+  const contactEmail = document.getElementById('contact-email');
+  const contactStatus = document.getElementById('contact-status');
+  const contactFallback = document.querySelector<HTMLElement>('.contact-fallback');
+  let contactReset: number;
+
+  if (contactButton && contactEmail && contactStatus && contactFallback) {
+    contactButton.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(contactEmail.textContent.trim());
+      } catch {
+        window.clearTimeout(contactReset);
+        contactButton.removeAttribute('data-copied');
+        contactFallback.hidden = false;
+        contactStatus.textContent = 'Could not copy the email address. Use the email link below.';
+        return;
+      }
+
+      window.clearTimeout(contactReset);
+      contactFallback.hidden = true;
+      contactButton.setAttribute('data-copied', '');
+      contactStatus.textContent = 'Email copied';
+      contactReset = window.setTimeout(() => {
+        contactButton.removeAttribute('data-copied');
+        contactStatus.textContent = '';
+      }, 2500);
+    });
+  }
 
   const openDialog = (id: string) => {
     const dialog = document.getElementById(id);
@@ -305,12 +331,11 @@ const columns = [
   });
   const filters = [...document.querySelectorAll<HTMLAnchorElement>('[data-view]')];
   const cards = document.querySelectorAll<HTMLButtonElement>('[data-category]');
-  const gallery = document.getElementById('gallery');
 
   const applyFilter = () => {
-    const requested = location.hash.slice(1);
+    const hash = location.hash.slice(1);
+    const requested = hash === 'playground' ? 'visual-craft' : hash;
     const active = filters.some((link) => link.dataset.view === requested) ? requested : 'work';
-    gallery?.setAttribute('data-active-view', active);
 
     cards.forEach((card) => {
       card.hidden = active !== 'work' && card.dataset.category !== active;

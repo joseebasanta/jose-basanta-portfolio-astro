@@ -48,17 +48,108 @@
   cursor: pointer;
 }
 
-.profile-actions .contact-button {
-  color: var(--color-accent-foreground);
-  background: var(--color-accent);
-}
-
-.profile-actions button:hover {
+.profile-actions .about-trigger:hover {
   background: var(--color-surface-hover);
 }
 
-.profile-actions .contact-button:hover {
-  background: var(--color-gray-50);
+.profile-actions .contact-button {
+  position: relative;
+  display: inline-grid;
+  justify-items: center;
+  color: var(--color-accent-foreground);
+  background: var(--color-accent);
+  transition: background-color 150ms ease-out, scale 150ms ease-out;
+}
+
+.contact-button:active {
+  scale: 0.96;
+}
+
+.contact-button:focus-visible {
+  --contact-hover: 1;
+  --contact-preview-y: 0px;
+}
+
+.contact-message,
+.contact-confirmation {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: opacity 150ms ease-out, translate 180ms ease-out;
+}
+
+.contact-confirmation {
+  opacity: 0;
+  translate: 0 4px;
+}
+
+.contact-button[data-copied] .contact-message {
+  opacity: 0;
+  translate: 0 -4px;
+}
+
+.contact-button[data-copied] .contact-confirmation {
+  opacity: 1;
+  translate: none;
+}
+
+.contact-icon {
+  display: inline-grid;
+}
+
+.contact-icon i {
+  grid-area: 1 / 1;
+  transition: opacity 150ms ease-out;
+}
+
+.contact-icon .ph-envelope-simple {
+  opacity: calc(1 - var(--contact-hover, 0));
+}
+
+.contact-icon .ph-copy {
+  opacity: var(--contact-hover, 0);
+}
+
+.contact-preview {
+  @apply text-label-xs;
+  position: absolute;
+  z-index: 1;
+  inset: auto auto calc(100% + 8px) 50%;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-foreground);
+  background: var(--color-surface-strong);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: var(--contact-hover, 0);
+  transform: translate(
+      calc(-50% + var(--contact-preview-x, 0px)),
+      var(--contact-preview-y, 6px)
+    )
+    rotate(var(--contact-preview-angle, 0deg));
+  transition: opacity 150ms ease-out, transform 200ms ease-out;
+}
+
+.contact-button[data-copied] .contact-preview {
+  animation: contact-preview-flash 450ms ease-out;
+}
+
+@keyframes contact-preview-flash {
+  from {
+    background-color: var(--color-surface-hover);
+    color: var(--color-gray-0);
+  }
+}
+
+.contact-fallback {
+  @apply text-label-sm;
+  flex-basis: 100%;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .about-trigger {
@@ -103,12 +194,23 @@
     opacity: 1;
     transform: translateX(-50%);
   }
+
+  .profile-actions .contact-button:hover {
+    --contact-hover: 1;
+    --contact-preview-y: 0px;
+    background: var(--color-gray-300);
+  }
 }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .about-trigger:hover:not(:focus-visible) .about-portrait {
-    transform: translateX(calc(-50% + var(--portrait-offset, 0px)))
-      rotate(var(--portrait-tilt, 0deg));
+    transform: translateX(calc(-50% + var(--preview-offset, 0px)))
+      rotate(var(--preview-tilt, 0deg));
+  }
+
+  .contact-button:hover:not(:focus-visible) .contact-preview {
+    --contact-preview-x: var(--preview-offset, 0px);
+    --contact-preview-angle: var(--preview-tilt, 0deg);
   }
 }
 
@@ -201,59 +303,31 @@
 
 .project-caption {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
   gap: 2px 12px;
   position: absolute;
-  inset: auto 12px 12px;
-  padding: 10px 12px;
-  border-radius: 7px;
-  background: var(--color-surface);
+  inset: auto 0 0;
+  padding: 8px 12px;
+  background: var(--color-background);
 }
 
 .project-name {
   @apply text-label-sm;
 }
 
-.project-kind {
-  @apply text-paragraph-xs;
-  grid-column: 1;
-  grid-row: 2;
-  color: var(--color-muted-foreground);
-}
-
-.project-caption i {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  color: var(--color-accent);
-}
-
-.project-summary,
-.project-summary-track > [aria-hidden] {
-  display: none;
-}
-
-[data-active-view='work'] .project-caption {
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: baseline;
-  inset: auto 0 0;
-  padding: 8px 12px;
-  border-radius: 0;
-  background: var(--color-background);
-}
-
-[data-active-view='work'] .project-caption :is(.project-kind, i) {
-  display: none;
-}
-
-[data-active-view='work'] .project-summary {
+.project-summary {
   @apply text-paragraph-xs;
   display: block;
   color: var(--color-muted-foreground);
 }
 
+.project-summary-track > [aria-hidden] {
+  display: none;
+}
+
 @media (hover: hover) and (pointer: fine) and (min-width: 741px) {
-  [data-active-view='work'] .project-caption {
+  .project-caption {
     opacity: 0;
     transform: translateY(100%);
     transition:
@@ -261,26 +335,26 @@
       opacity 180ms ease-out;
   }
 
-  [data-active-view='work'] .project-card:is(:hover, :focus-visible) .project-caption {
+  .project-card:is(:hover, :focus-visible) .project-caption {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
 @media (hover: hover) and (pointer: fine) and (min-width: 741px) and (prefers-reduced-motion: no-preference) {
-  [data-active-view='work'] .project-card:hover:not(:focus-visible) .project-summary {
+  .project-card:hover:not(:focus-visible) .project-summary {
     overflow: hidden;
     container-type: inline-size;
   }
 
-  [data-active-view='work'] .project-card:hover:not(:focus-visible) .project-summary-track {
+  .project-card:hover:not(:focus-visible) .project-summary-track {
     display: flex;
     width: max-content;
     white-space: nowrap;
     animation: project-summary-scroll 12s linear infinite;
   }
 
-  [data-active-view='work'] .project-card:hover:not(:focus-visible) .project-summary-track > span {
+  .project-card:hover:not(:focus-visible) .project-summary-track > span {
     display: block;
     flex: none;
     min-width: 50cqi;
@@ -392,12 +466,6 @@
 }
 .primary-button:hover {
   background: var(--color-gray-600);
-}
-.dialog-icon {
-  display: block;
-  color: var(--color-accent-secondary);
-  font-size: 36px;
-  margin-bottom: 26px;
 }
 .type-demo {
   margin: 24px 0;
