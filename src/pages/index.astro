@@ -216,6 +216,8 @@ const columns = [
   </dialog>
 </BaseLayout>
 <script>
+  import { trackPortfolioEvent } from '@/analytics/mixpanel';
+
   const openDialog = (id: string) => {
     const dialog = document.getElementById(id);
     if (!(dialog instanceof HTMLDialogElement)) return;
@@ -227,7 +229,12 @@ const columns = [
     button.addEventListener('click', () => openDialog(button.dataset.open!));
   });
   document.querySelectorAll<HTMLButtonElement>('[data-project]').forEach((button) => {
-    button.addEventListener('click', () => openDialog(`project-${button.dataset.project}`));
+    button.addEventListener('click', () => {
+      const project = button.dataset.project;
+      if (!project) return;
+      openDialog(`project-${project}`);
+      trackPortfolioEvent('Project Opened', { project_id: project });
+    });
   });
   document.querySelectorAll<HTMLDialogElement>('dialog').forEach((dialog) => {
     dialog

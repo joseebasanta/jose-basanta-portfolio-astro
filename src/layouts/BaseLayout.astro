@@ -45,5 +45,10 @@ const ogImageURL = new URL(image, Astro.site);
   </head>
   <body>
     <slot />
+    <script>
+      import { trackPortfolioEvent } from '@/analytics/mixpanel';
+
+      trackPortfolioEvent('Page Viewed');
+    </script>
   </body>
 </html>

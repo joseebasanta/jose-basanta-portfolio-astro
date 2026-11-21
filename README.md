@@ -102,6 +102,17 @@ Import alias: `@/*` resolves to `src/*` (see `tsconfig.json`).
 
 See `src/content/projects/nimbus-expense-tracker.mdx` for a full example.
 
+## Mixpanel
+
+Set `PUBLIC_MIXPANEL_TOKEN` to the **Project Token** under Mixpanel's **Project Settings**.
+Add it to the **Production** environment in Vercel and rebuild the site. Set
+`PUBLIC_MIXPANEL_REGION` to `EU` or `IN` if the Mixpanel project uses that data region.
+The default region is `US`. These are build-time settings for the static site.
+
+In Mixpanel Insights, use **Page Viewed** with a breakdown by `page_path` for visits,
+and **Project Opened** with a breakdown by `project_id` for project interest.
+Analytics stays inactive in the dev server and in builds without a project token.
+
 ## Before deploying
 
 - [ ] Confirm the public `site` URL in `astro.config.mjs` if you add a custom domain.
