@@ -5,6 +5,13 @@ import championsArtwork from '@/assets/community-champions.png';
 import ethSalvadorArtwork from '@/assets/eth-salvador.png';
 import illustrationsCover from '@/assets/illustrations-cover.png';
 import invisibleGardenArtwork from '@/assets/invisible-garden.png';
+import kamigotchiIntroduction from '@/assets/kamigotchi/01-introduction.png';
+import kamigotchiOnboarding from '@/assets/kamigotchi/02-onboarding.png';
+import kamigotchiItems from '@/assets/kamigotchi/03-items-of-the-week.png';
+import kamigotchiEvents from '@/assets/kamigotchi/04-community-events.png';
+import kamigotchiZones from '@/assets/kamigotchi/05-new-zones.png';
+import kamigotchiZoneVariants from '@/assets/kamigotchi/06-zone-variants.png';
+import kamigotchiStickers from '@/assets/kamigotchi/07-stickers.png';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import '@phosphor-icons/web/regular';
 import '@/styles/portfolio.css';
@@ -25,14 +32,15 @@ const [profilePhoto] = Object.values(
   }),
 );
 
-// Webflow artwork is from Simple Icons. The other marks are from SVG Logos.
+// Webflow is from Simple Icons. The remaining SVGs are from SVG Logos.
 const toolLogos = {
-  'Adobe After Effects': 'adobe-after-effects',
-  'Adobe Illustrator': 'adobe-illustrator',
-  'Adobe Photoshop': 'adobe-photoshop',
-  Figma: 'figma',
-  Midjourney: 'midjourney',
-  Webflow: 'webflow',
+  'Adobe After Effects': 'adobe-after-effects.svg',
+  'Adobe Illustrator': 'adobe-illustrator.svg',
+  'Adobe Photoshop': 'adobe-photoshop.svg',
+  Figma: 'figma.svg',
+  Midjourney: 'midjourney.svg',
+  Procreate: 'procreate.png',
+  Webflow: 'webflow.svg',
 } as const;
 
 type GalleryView = 'work' | 'visual-craft';
@@ -121,6 +129,34 @@ const projects: Project[] = [
         image: championsArtwork,
         alt: 'Kamigotchi World Community Champions poster with a pixel-art trophy and colorful characters against a yellow sunburst.',
       },
+      {
+        image: kamigotchiIntroduction,
+        alt: 'Introducing Kamigotchi World banner with six colorful pixel-art characters in a forest.',
+      },
+      {
+        image: kamigotchiOnboarding,
+        alt: 'Two Kamigotchi onboarding banners titled How to Play and Welcome to Yominet.',
+      },
+      {
+        image: kamigotchiItems,
+        alt: 'Item of the Week graphics featuring an egg and a red heart crystal.',
+      },
+      {
+        image: kamigotchiEvents,
+        alt: 'Promotional cards for Kamigotchi Weekly Session 11 and How Kamigotchi Save the World.',
+      },
+      {
+        image: kamigotchiZones,
+        alt: 'New Zones Available banner showing four illustrated game locations.',
+      },
+      {
+        image: kamigotchiZoneVariants,
+        alt: 'Purple and orange versions of a New Zones Available graphic, each showing three zone previews.',
+      },
+      {
+        image: kamigotchiStickers,
+        alt: 'Three Kamigotchi character stickers with yellow outlines.',
+      },
     ],
   },
   {
@@ -173,6 +209,7 @@ const projects: Project[] = [
     summary: illustrationDescription,
     detail: illustrationDescription,
     discipline: 'Illustration',
+    tools: ['Procreate', 'Adobe Illustrator', 'Adobe Photoshop'],
     artwork: [
       {
         image: illustrationsCover,
@@ -335,7 +372,7 @@ const columns = [
               {p.tools.map((tool) => (
                 <li>
                   <img
-                    src={`${import.meta.env.BASE_URL}images/tools/${toolLogos[tool]}.svg`}
+                    src={`${import.meta.env.BASE_URL}images/tools/${toolLogos[tool]}`}
                     alt=""
                     width="16"
                     height="16"
@@ -347,17 +384,20 @@ const columns = [
           )}
         </header>
         <section class="visual-project-scroll" aria-label="Project details" tabindex="0">
-          {p.artwork?.map(({ image, alt }) => (
-            <Image
-              class="visual-project-artwork"
-              src={image}
-              alt={alt}
-              widths={[400, 800, 1200, 1600]}
-              sizes="(max-width: 740px) calc(100vw - 32px), (max-width: 1647px) 65vw, 1056px"
-              quality="high"
-            />
+          {p.artwork?.map(({ image, alt }, index) => (
+            <>
+              <Image
+                class="visual-project-artwork"
+                src={image}
+                alt={alt}
+                widths={[400, 800, 1200, 1600]}
+                sizes="(max-width: 740px) calc(100vw - 32px), (max-width: 1647px) 65vw, 1056px"
+                quality="high"
+              />
+              {index === 0 && <p class="visual-project-description">{p.detail}</p>}
+            </>
           ))}
-          <p class="visual-project-description">{p.detail}</p>
+          {!p.artwork?.length && <p class="visual-project-description">{p.detail}</p>}
         </section>
       </div>
     </dialog>
