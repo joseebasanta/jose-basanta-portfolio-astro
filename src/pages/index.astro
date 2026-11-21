@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import championsArtwork from '@/assets/community-champions.png';
 import ethSalvadorArtwork from '@/assets/eth-salvador.png';
+import illustrationsCover from '@/assets/illustrations-cover.png';
 import invisibleGardenArtwork from '@/assets/invisible-garden.png';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import '@phosphor-icons/web/regular';
@@ -24,6 +25,16 @@ const [profilePhoto] = Object.values(
   }),
 );
 
+// Webflow artwork is from Simple Icons. The other marks are from SVG Logos.
+const toolLogos = {
+  'Adobe After Effects': 'adobe-after-effects',
+  'Adobe Illustrator': 'adobe-illustrator',
+  'Adobe Photoshop': 'adobe-photoshop',
+  Figma: 'figma',
+  Midjourney: 'midjourney',
+  Webflow: 'webflow',
+} as const;
+
 type GalleryView = 'work' | 'visual-craft';
 type Artwork = { image: ImageMetadata; alt: string };
 type Project = {
@@ -35,7 +46,7 @@ type Project = {
   summary: string;
   detail: string;
   discipline: string;
-  tools?: string[];
+  tools?: (keyof typeof toolLogos)[];
   artwork?: Artwork[];
 };
 
@@ -156,12 +167,18 @@ const projects: Project[] = [
   {
     id: 'illustrations',
     views: ['visual-craft'],
-    shape: 'wide',
+    shape: 'landscape',
     title: 'Illustrations',
     kind: 'Collection',
     summary: illustrationDescription,
     detail: illustrationDescription,
     discipline: 'Illustration',
+    artwork: [
+      {
+        image: illustrationsCover,
+        alt: 'Two illustrated hands reach toward a glowing orange Ethereum symbol in a colorful rocky landscape.',
+      },
+    ],
   },
 ];
 const visualProjects = projects.filter((project) => project.views.includes('visual-craft'));
@@ -315,7 +332,17 @@ const columns = [
           <h2 id={`title-${p.id}`}>{p.title}</h2>
           {p.tools && p.tools.length > 0 && (
             <ul class="visual-project-tools" role="list" aria-label="Tools used">
-              {p.tools.map((tool) => <li>{tool}</li>)}
+              {p.tools.map((tool) => (
+                <li>
+                  <img
+                    src={`${import.meta.env.BASE_URL}images/tools/${toolLogos[tool]}.svg`}
+                    alt=""
+                    width="16"
+                    height="16"
+                  />
+                  <span>{tool}</span>
+                </li>
+              ))}
             </ul>
           )}
         </header>
