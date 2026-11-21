@@ -367,7 +367,7 @@
     display: flex;
     width: max-content;
     white-space: nowrap;
-    animation: project-summary-scroll 12s linear infinite;
+    animation: project-summary-scroll var(--project-summary-duration, 0s) linear infinite;
   }
 
   .project-card:hover:not(:focus-visible) .project-summary-track > span {

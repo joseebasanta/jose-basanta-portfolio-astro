@@ -435,6 +435,23 @@ const columns = [
   window.addEventListener('hashchange', applyFilter);
   applyFilter();
 
+  const summaryPixelsPerSecond = 18;
+  const summaryObserver = new ResizeObserver((entries) => {
+    for (const { target, contentRect } of entries) {
+      if (!(target instanceof HTMLElement) || contentRect.width === 0) continue;
+
+      // Each loop moves by one of the three equal copies of the summary.
+      const distance = contentRect.width / 3;
+      target.style.setProperty(
+        '--project-summary-duration',
+        `${distance / summaryPixelsPerSecond}s`,
+      );
+    }
+  });
+  document
+    .querySelectorAll('.project-summary-track')
+    .forEach((track) => summaryObserver.observe(track));
+
   const slider = document.querySelector<HTMLInputElement>('#type-weight');
   slider?.addEventListener('input', () => {
     const specimen = document.querySelector<HTMLElement>('.type-specimen');
