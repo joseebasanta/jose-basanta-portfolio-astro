@@ -270,6 +270,16 @@
   gap: 10px;
 }
 
+.project-tile {
+  position: relative;
+  min-width: 0;
+}
+
+.project-tile[hidden],
+.project-preview-toggle[hidden] {
+  display: none;
+}
+
 .project-card {
   position: relative;
   display: block;
@@ -282,10 +292,6 @@
   color: var(--color-foreground);
   cursor: pointer;
   text-align: left;
-}
-
-.project-card[hidden] {
-  display: none;
 }
 
 .project-card.tall {
@@ -309,6 +315,24 @@
 
 video.project-image {
   pointer-events: none;
+}
+
+.project-preview-toggle {
+  position: absolute;
+  inset: 8px 8px auto auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-foreground);
+  background: color-mix(in srgb, var(--color-background) 76%, transparent);
+  cursor: pointer;
+}
+
+.project-preview-toggle:hover {
+  background: var(--color-surface-hover);
 }
 
 .project-card:hover {
@@ -483,9 +507,33 @@ video.project-image {
   padding: 24px var(--panel-padding) 20px;
 }
 
+.visual-project-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 16px;
+}
+
 .visual-project-header h2 {
   @apply text-title-h3;
   margin-block-start: 6px;
+}
+
+.visual-project-website {
+  @apply text-label-sm;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: var(--color-accent-foreground);
+  background: var(--color-accent);
+}
+
+.visual-project-website:hover {
+  background: var(--color-gray-0);
 }
 
 .visual-project-tools {
@@ -530,6 +578,26 @@ video.project-image {
 .visual-project-scroll:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: -4px;
+}
+
+.visual-project-live-preview {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface-strong);
+}
+
+.visual-project-live-preview .eyebrow {
+  @apply text-subheading-sm;
+  padding: 12px;
+}
+
+.visual-project-live-preview iframe {
+  display: block;
+  width: 100%;
+  height: clamp(320px, 62dvh, 640px);
+  border: 0;
+  background: var(--color-background);
 }
 
 .dialog-artwork,
@@ -606,26 +674,29 @@ video.project-image {
 
 @media (prefers-reduced-motion: no-preference) {
   .visual-project-panel {
-    transform: translateX(0);
-    transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translate3d(0, 0, 0);
+    transition: transform 400ms cubic-bezier(0.28, 0.48, 0.25, 1);
   }
 
   .visual-project-dialog::backdrop {
     opacity: 1;
-    transition: opacity 280ms ease-out;
+    transition: opacity 360ms ease;
   }
 
   .visual-project-dialog[data-closing] .visual-project-panel {
-    transform: translateX(var(--panel-slide-distance));
+    transform: translate3d(var(--panel-slide-distance), 0, 0);
+    transition-duration: 280ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .visual-project-dialog[data-closing]::backdrop {
     opacity: 0;
+    transition-duration: 280ms;
   }
 
   @starting-style {
     .visual-project-dialog[open] .visual-project-panel {
-      transform: translateX(var(--panel-slide-distance));
+      transform: translate3d(var(--panel-slide-distance), 0, 0);
     }
 
     .visual-project-dialog[open]::backdrop {
@@ -684,30 +755,6 @@ video.project-image {
 .primary-button:hover {
   background: var(--color-gray-600);
 }
-.type-demo {
-  margin: 24px 0;
-  border-radius: 15px;
-  background: var(--color-gray-900);
-  padding: 23px;
-}
-.type-specimen {
-  @apply text-title-h1;
-  padding: 10px 0 25px;
-  color: var(--color-accent);
-  overflow-wrap: anywhere;
-}
-.type-demo label {
-  display: flex;
-  justify-content: space-between;
-  @apply text-label-sm;
-  color: var(--color-muted-foreground);
-}
-.type-demo input {
-  width: 100%;
-  margin-top: 12px;
-  accent-color: var(--color-accent);
-  cursor: pointer;
-}
 .skip-link {
   position: fixed;
   z-index: 10;
@@ -762,10 +809,6 @@ video.project-image {
   .dialog-content,
   .small-dialog .dialog-content {
     padding: 24px;
-  }
-
-  .type-specimen {
-    @apply text-title-h4;
   }
 }
 

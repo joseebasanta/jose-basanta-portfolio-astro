@@ -57,12 +57,16 @@ const [profilePhoto] = Object.values(
   }),
 );
 
-// Webflow is from Simple Icons. The remaining SVGs are from SVG Logos.
+// Webflow is from Simple Icons. Claude Code and Codex are from Lobe Icons.
+// The remaining SVGs are from SVG Logos.
 const toolLogos = {
   'Adobe After Effects': 'adobe-after-effects.svg',
   'Adobe Illustrator': 'adobe-illustrator.svg',
   'Adobe Photoshop': 'adobe-photoshop.svg',
+  'Claude Code': 'claude-code.svg',
+  Codex: 'codex.svg',
   Figma: 'figma.svg',
+  Higgsfield: 'higgsfield.svg',
   Midjourney: 'midjourney.svg',
   Procreate: 'procreate.png',
   Webflow: 'webflow.svg',
@@ -84,6 +88,7 @@ type Project = {
   tools?: (keyof typeof toolLogos)[];
   artwork?: Artwork[];
   video?: ProjectVideo;
+  website?: string;
   sidePanel?: boolean;
 };
 
@@ -98,50 +103,6 @@ const projects: Project[] = [
     detail:
       'An exploration of a calmer way to see your money. A clear overview, thoughtful hierarchy, and a little breathing room turn everyday finances into something more approachable.',
     discipline: 'Product design · Interface design',
-  },
-  {
-    id: 'elsewhere',
-    views: ['work'],
-    shape: 'wide',
-    title: 'Elsewhere',
-    kind: 'Concept',
-    summary: 'A travel editorial for taking the scenic route.',
-    detail:
-      'A travel editorial concept for taking the scenic route. Warm photography and expressive typography make room for places, stories, and the joy of discovering somewhere new.',
-    discipline: 'Web design · Art direction',
-  },
-  {
-    id: 'variable-type',
-    views: ['work'],
-    shape: 'square',
-    title: 'Variable Type',
-    kind: 'Experiment',
-    summary: 'An interactive study in how type changes character.',
-    detail:
-      'A small experiment in the expressive side of typography. Move the slider below and see how a single letterform changes character.',
-    discipline: 'Typography · Interaction',
-  },
-  {
-    id: 'field',
-    views: ['work'],
-    shape: 'wide',
-    title: 'Field',
-    kind: 'Concept',
-    summary: 'A quieter workspace for planning one day at a time.',
-    detail:
-      'A productivity concept built around a quieter day. Simple lists, gentle color, and a focused workspace help make the next step feel clear.',
-    discipline: 'Product design · Interaction',
-  },
-  {
-    id: 'orbit',
-    views: ['work'],
-    shape: 'tall',
-    title: 'Orbit',
-    kind: 'Concept',
-    summary: 'A music player concept that puts the artwork first.',
-    detail:
-      'An independent music-app concept exploring a more expressive listening experience. Dark surfaces, bold artwork, and a focused library put the music first.',
-    discipline: 'Product design · Visual exploration',
   },
   {
     id: 'kamigotchi',
@@ -358,6 +319,8 @@ const projects: Project[] = [
     summary: intelliviaDescription,
     detail: intelliviaDescription,
     discipline: 'Web design',
+    tools: ['Claude Code', 'Codex', 'Figma', 'Higgsfield'],
+    website: 'https://intellivia-web.vercel.app/',
     sidePanel: true,
     video: {
       src: `${import.meta.env.BASE_URL}videos/intellivia-cover.mp4`,
@@ -382,8 +345,8 @@ const filters = [
   { id: 'visual-craft', label: 'Visual craft' },
 ];
 const columns = [
-  [projects[10], projects[5], projects[7], projects[9], projects[0], projects[2], projects[4]],
-  [projects[6], projects[8], projects[1], projects[3]],
+  [projects[6], projects[1], projects[3], projects[5]],
+  [projects[0], projects[2], projects[4]],
 ];
 ---
 
@@ -468,48 +431,63 @@ const columns = [
         {columns.map((column) => (
           <div class="project-stack">
             {column.map((project) => (
-              <button
-                type="button"
-                class:list={['project-card', project.shape]}
-                data-project={project.id}
+              <div
+                class="project-tile"
                 data-gallery-views={project.views.join(' ')}
                 hidden={!project.views.includes('work')}
-                aria-label={`Explore ${project.title} — ${project.kind}`}
-                aria-describedby={`summary-${project.id}`}
-                aria-haspopup="dialog"
               >
-                {project.video ? (
-                  <video
-                    class="project-image"
-                    data-project-preview
-                    {...project.video}
-                    aria-hidden="true"
-                    preload="none"
-                    muted
-                    playsinline
-                    loop
-                  ></video>
-                ) : project.artwork?.[0] && (
-                  <Image
-                    class="project-image"
-                    src={project.artwork[0].image}
-                    alt=""
-                    widths={[360, 720, 1080, 1440]}
-                    sizes="(max-width: 480px) calc(100vw - 32px), (max-width: 740px) 50vw, 37vw"
-                    quality="high"
-                  />
-                )}
-                <span class="project-caption">
-                  <span class="project-name">{project.title}</span>
-                  <span class="project-summary">
-                    <span class="project-summary-track">
-                      <span id={`summary-${project.id}`}>{project.summary}</span>
-                      <span aria-hidden="true">{project.summary}</span>
-                      <span aria-hidden="true">{project.summary}</span>
+                <button
+                  type="button"
+                  class:list={['project-card', project.shape]}
+                  data-project={project.id}
+                  aria-label={`Explore ${project.title} — ${project.kind}`}
+                  aria-describedby={`summary-${project.id}`}
+                  aria-haspopup="dialog"
+                >
+                  {project.video ? (
+                    <video
+                      class="project-image"
+                      data-project-preview
+                      {...project.video}
+                      aria-hidden="true"
+                      preload="none"
+                      muted
+                      playsinline
+                      loop
+                    ></video>
+                  ) : project.artwork?.[0] && (
+                    <Image
+                      class="project-image"
+                      src={project.artwork[0].image}
+                      alt=""
+                      widths={[360, 720, 1080, 1440]}
+                      sizes="(max-width: 480px) calc(100vw - 32px), (max-width: 740px) 50vw, 37vw"
+                      quality="high"
+                    />
+                  )}
+                  <span class="project-caption">
+                    <span class="project-name">{project.title}</span>
+                    <span class="project-summary">
+                      <span class="project-summary-track">
+                        <span id={`summary-${project.id}`}>{project.summary}</span>
+                        <span aria-hidden="true">{project.summary}</span>
+                        <span aria-hidden="true">{project.summary}</span>
+                      </span>
                     </span>
                   </span>
-                </span>
-              </button>
+                </button>
+                {project.video && (
+                  <button
+                    type="button"
+                    class="project-preview-toggle"
+                    data-preview-toggle={project.title}
+                    aria-label={`Play ${project.title} video preview`}
+                    hidden
+                  >
+                    <i class="ph ph-play" aria-hidden="true"></i>
+                  </button>
+                )}
+              </div>
             ))}
           </div>
         ))}
@@ -533,8 +511,22 @@ const columns = [
           >
             <i class="ph ph-x" aria-hidden="true"></i>
           </button>
-          <p class="eyebrow">{p.discipline}</p>
-          <h2 id={`title-${p.id}`}>{p.title}</h2>
+          <div class="visual-project-heading">
+            <div>
+              <p class="eyebrow">{p.discipline}</p>
+              <h2 id={`title-${p.id}`}>{p.title}</h2>
+            </div>
+            {p.website && (
+              <a
+                class="visual-project-website"
+                href={p.website}
+                target="_blank"
+                rel="noopener"
+              >
+                View Website <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+              </a>
+            )}
+          </div>
           {p.tools && p.tools.length > 0 && (
             <ul class="visual-project-tools" role="list" aria-label="Tools used">
               {p.tools.map((tool) => (
@@ -552,7 +544,17 @@ const columns = [
           )}
         </header>
         <section class="visual-project-scroll" aria-label="Project details" tabindex="0">
-          {p.video ? (
+          {p.website ? (
+            <section class="visual-project-live-preview" aria-labelledby={`preview-${p.id}`}>
+              <h3 class="eyebrow" id={`preview-${p.id}`}>Live preview</h3>
+              <iframe
+                data-project-website={p.website}
+                title={`Live preview of the ${p.title} website`}
+                loading="lazy"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+              ></iframe>
+            </section>
+          ) : p.video ? (
             <video
               class="visual-project-artwork"
               {...p.video}
@@ -564,7 +566,7 @@ const columns = [
           ) : p.artwork?.[0] && (
             <Image {...visualProjectImageOptions} src={p.artwork[0].image} alt={p.artwork[0].alt} />
           )}
-          <p class:list={['visual-project-description', { 'visual-project-lead': p.overview }]}>
+          <p class:list={['visual-project-description', { 'visual-project-lead': p.overview || p.website }]}>
             {p.detail}
           </p>
           {p.overview && (
@@ -608,23 +610,6 @@ const columns = [
           <span class="project-tag">{p.kind}</span>
         </h2>
         <p>{p.detail}</p>
-        {p.id === 'variable-type' && (
-          <div class="type-demo">
-            <div
-              class="type-specimen"
-              contenteditable="plaintext-only"
-              role="textbox"
-              aria-label="Type something to try the variable font"
-              spellcheck="false"
-            >
-              Play a little.
-            </div>
-            <label for="type-weight">
-              Font weight <output id="weight-value">500</output>
-            </label>
-            <input id="type-weight" type="range" min="100" max="900" step="1" value="500" />
-          </div>
-        )}
         {(p.kind === 'Concept' || p.kind === 'Experiment') && (
           <p class="concept-note">An independent design exploration.</p>
         )}
@@ -697,37 +682,80 @@ const columns = [
     });
   }
 
-  const projectPreviews = document.querySelectorAll<HTMLVideoElement>('[data-project-preview]');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const pauseProjectPreviews = () => projectPreviews.forEach((video) => video.pause());
+  const previewUpdates: (() => void)[] = [];
+  const syncProjectPreviews = () => previewUpdates.forEach((update) => update());
 
-  projectPreviews.forEach((video) => {
-    const card = video.closest('button');
-    card?.addEventListener('pointerenter', (event) => {
-      if (event.pointerType !== 'mouse' || reducedMotion.matches) return;
-      void video.play().catch(() => {});
+  document.querySelectorAll<HTMLVideoElement>('[data-project-preview]').forEach((video) => {
+    const tile = video.closest<HTMLElement>('[data-gallery-views]');
+    const toggle = tile?.querySelector<HTMLButtonElement>('[data-preview-toggle]');
+    if (!tile || !toggle) return;
+
+    let inViewport = false;
+    let playRequested: boolean | undefined;
+
+    const updatePlayback = () => {
+      const canPlay =
+        inViewport && !tile.hidden && !document.hidden && !document.querySelector('dialog[open]');
+      const shouldPlay = canPlay && (playRequested ?? !reducedMotion.matches);
+      if (shouldPlay && video.paused) {
+        void video.play().catch(() => {});
+      } else if (!shouldPlay && !video.paused) {
+        video.pause();
+      }
+    };
+
+    const icon = toggle.querySelector('i');
+    const updateToggle = () => {
+      const action = video.paused ? 'Play' : 'Pause';
+      toggle.setAttribute('aria-label', `${action} ${toggle.dataset.previewToggle} video preview`);
+      icon?.classList.toggle('ph-play', video.paused);
+      icon?.classList.toggle('ph-pause', !video.paused);
+    };
+
+    toggle.addEventListener('click', () => {
+      playRequested = video.paused;
+      updatePlayback();
     });
-    card?.addEventListener('pointerleave', () => video.pause());
+    video.addEventListener('play', updateToggle);
+    video.addEventListener('pause', updateToggle);
+    new IntersectionObserver((entries) => {
+      inViewport = entries.at(-1)?.isIntersecting ?? false;
+      updatePlayback();
+    }).observe(video);
+    previewUpdates.push(updatePlayback);
+    toggle.hidden = false;
   });
-  reducedMotion.addEventListener('change', () => {
-    if (reducedMotion.matches) pauseProjectPreviews();
-  });
+  reducedMotion.addEventListener('change', syncProjectPreviews);
+  document.addEventListener('visibilitychange', syncProjectPreviews);
 
   const dialogTriggers = new WeakMap<HTMLDialogElement, HTMLButtonElement>();
+
+  const loadProjectWebsite = async (dialog: HTMLDialogElement) => {
+    const website = dialog.querySelector<HTMLIFrameElement>('[data-project-website]');
+    const url = website?.dataset.projectWebsite;
+    if (!website || !url) return;
+
+    // Load the embedded page after the panel has finished sliding in.
+    const animations = dialog.querySelector('.visual-project-panel')?.getAnimations() ?? [];
+    await Promise.allSettled(animations.map((animation) => animation.finished));
+    if (dialog.open && !dialog.hasAttribute('data-closing')) website.src = url;
+  };
 
   const openDialog = (id: string, trigger?: HTMLButtonElement) => {
     const dialog = document.getElementById(id);
     if (!(dialog instanceof HTMLDialogElement) || dialog.open) return;
     document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach((item) => item.close());
-    pauseProjectPreviews();
     dialog.removeAttribute('data-closing');
     if (trigger && dialog.classList.contains('visual-project-dialog')) {
       dialogTriggers.set(dialog, trigger);
     }
     dialog.showModal();
+    syncProjectPreviews();
     document.documentElement.classList.add('dialog-open');
     const scrollArea = dialog.querySelector('.visual-project-scroll');
     if (scrollArea) scrollArea.scrollTop = 0;
+    void loadProjectWebsite(dialog);
   };
 
   const closeDialog = async (dialog: HTMLDialogElement) => {
@@ -779,17 +807,18 @@ const columns = [
     dialog.addEventListener('close', () => {
       if (dialog.open) return;
       dialog.querySelectorAll('video').forEach((video) => video.pause());
+      dialog.querySelector('[data-project-website]')?.removeAttribute('src');
       dialog.removeAttribute('data-closing');
       if (document.querySelector('dialog[open]')) return;
       document.documentElement.classList.remove('dialog-open');
       dialogTriggers.get(dialog)?.focus({ preventScroll: true });
+      syncProjectPreviews();
     });
   });
   const filters = [...document.querySelectorAll<HTMLAnchorElement>('[data-view]')];
-  const cards = document.querySelectorAll<HTMLButtonElement>('[data-gallery-views]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-gallery-views]');
 
   const applyFilter = () => {
-    pauseProjectPreviews();
     const hash = location.hash.slice(1);
     const requested = hash === 'playground' ? 'visual-craft' : hash;
     const active = filters.some((link) => link.dataset.view === requested) ? requested : 'work';
@@ -797,6 +826,7 @@ const columns = [
     cards.forEach((card) => {
       card.hidden = !card.dataset.galleryViews?.split(' ').includes(active);
     });
+    syncProjectPreviews();
     filters.forEach((link) => {
       if (link.dataset.view === active) link.setAttribute('aria-current', 'true');
       else link.removeAttribute('aria-current');
@@ -822,12 +852,4 @@ const columns = [
   document
     .querySelectorAll('.project-summary-track')
     .forEach((track) => summaryObserver.observe(track));
-
-  const slider = document.querySelector<HTMLInputElement>('#type-weight');
-  slider?.addEventListener('input', () => {
-    const specimen = document.querySelector<HTMLElement>('.type-specimen');
-    if (specimen) specimen.style.fontWeight = slider.value;
-    const output = document.querySelector<HTMLOutputElement>('#weight-value');
-    if (output) output.value = slider.value;
-  });
 </script>
