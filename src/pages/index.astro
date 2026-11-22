@@ -48,6 +48,7 @@ const invisibleGardenDescription =
 const illustrationDescription = 'A selection of my illustrations.';
 const collective2077Description =
   'Created branding assets, editorial graphics, and marketing visuals for a Web3 research group.';
+const intelliviaDescription = 'A landing page for Intellivia, a technology-focused law firm.';
 
 const [profilePhoto] = Object.values(
   import.meta.glob<ImageMetadata>('/src/assets/jose-basanta-profile.{jpg,jpeg,png,webp}', {
@@ -69,6 +70,7 @@ const toolLogos = {
 
 type GalleryView = 'work' | 'visual-craft';
 type Artwork = { image: ImageMetadata; alt: string };
+type ProjectVideo = { src: string; poster: string; width: number; height: number };
 type Project = {
   id: string;
   views: GalleryView[];
@@ -81,6 +83,8 @@ type Project = {
   discipline: string;
   tools?: (keyof typeof toolLogos)[];
   artwork?: Artwork[];
+  video?: ProjectVideo;
+  sidePanel?: boolean;
 };
 
 const projects: Project[] = [
@@ -345,9 +349,28 @@ const projects: Project[] = [
       },
     ],
   },
+  {
+    id: 'intellivia',
+    views: ['work'],
+    shape: 'landscape',
+    title: 'Intellivia',
+    kind: 'Landing page',
+    summary: intelliviaDescription,
+    detail: intelliviaDescription,
+    discipline: 'Web design',
+    sidePanel: true,
+    video: {
+      src: `${import.meta.env.BASE_URL}videos/intellivia-cover.mp4`,
+      poster: `${import.meta.env.BASE_URL}videos/intellivia-cover.webp`,
+      width: 1440,
+      height: 776,
+    },
+  },
 ];
-const visualProjects = projects.filter((project) => project.views.includes('visual-craft'));
-const workProjects = projects.filter((project) => !project.views.includes('visual-craft'));
+const sidePanelProjects = projects.filter(
+  (project) => project.sidePanel || project.views.includes('visual-craft'),
+);
+const centeredProjects = projects.filter((project) => !sidePanelProjects.includes(project));
 const visualProjectImageOptions = {
   class: 'visual-project-artwork',
   widths: [400, 800, 1200, 1600],
@@ -359,7 +382,7 @@ const filters = [
   { id: 'visual-craft', label: 'Visual craft' },
 ];
 const columns = [
-  [projects[5], projects[7], projects[9], projects[0], projects[2], projects[4]],
+  [projects[10], projects[5], projects[7], projects[9], projects[0], projects[2], projects[4]],
   [projects[6], projects[8], projects[1], projects[3]],
 ];
 ---
@@ -455,7 +478,18 @@ const columns = [
                 aria-describedby={`summary-${project.id}`}
                 aria-haspopup="dialog"
               >
-                {project.artwork?.[0] && (
+                {project.video ? (
+                  <video
+                    class="project-image"
+                    data-project-preview
+                    {...project.video}
+                    aria-hidden="true"
+                    preload="none"
+                    muted
+                    playsinline
+                    loop
+                  ></video>
+                ) : project.artwork?.[0] && (
                   <Image
                     class="project-image"
                     src={project.artwork[0].image}
@@ -482,7 +516,7 @@ const columns = [
       </div>
     </section>
   </main>
-  {visualProjects.map((p) => (
+  {sidePanelProjects.map((p) => (
     <dialog
       class="visual-project-dialog"
       id={`project-${p.id}`}
@@ -518,7 +552,16 @@ const columns = [
           )}
         </header>
         <section class="visual-project-scroll" aria-label="Project details" tabindex="0">
-          {p.artwork?.[0] && (
+          {p.video ? (
+            <video
+              class="visual-project-artwork"
+              {...p.video}
+              aria-label={`Video preview of ${p.title}`}
+              preload="none"
+              controls
+              playsinline
+            ></video>
+          ) : p.artwork?.[0] && (
             <Image {...visualProjectImageOptions} src={p.artwork[0].image} alt={p.artwork[0].alt} />
           )}
           <p class:list={['visual-project-description', { 'visual-project-lead': p.overview }]}>
@@ -537,7 +580,7 @@ const columns = [
       </div>
     </dialog>
   ))}
-  {workProjects.map((p) => (
+  {centeredProjects.map((p) => (
     <dialog
       class="studio-dialog project-dialog"
       id={`project-${p.id}`}
@@ -582,7 +625,9 @@ const columns = [
             <input id="type-weight" type="range" min="100" max="900" step="1" value="500" />
           </div>
         )}
-        <p class="concept-note">An independent design exploration.</p>
+        {(p.kind === 'Concept' || p.kind === 'Experiment') && (
+          <p class="concept-note">An independent design exploration.</p>
+        )}
       </div>
     </dialog>
   ))}
@@ -652,12 +697,29 @@ const columns = [
     });
   }
 
+  const projectPreviews = document.querySelectorAll<HTMLVideoElement>('[data-project-preview]');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const pauseProjectPreviews = () => projectPreviews.forEach((video) => video.pause());
+
+  projectPreviews.forEach((video) => {
+    const card = video.closest('button');
+    card?.addEventListener('pointerenter', (event) => {
+      if (event.pointerType !== 'mouse' || reducedMotion.matches) return;
+      void video.play().catch(() => {});
+    });
+    card?.addEventListener('pointerleave', () => video.pause());
+  });
+  reducedMotion.addEventListener('change', () => {
+    if (reducedMotion.matches) pauseProjectPreviews();
+  });
+
   const dialogTriggers = new WeakMap<HTMLDialogElement, HTMLButtonElement>();
 
   const openDialog = (id: string, trigger?: HTMLButtonElement) => {
     const dialog = document.getElementById(id);
     if (!(dialog instanceof HTMLDialogElement) || dialog.open) return;
     document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach((item) => item.close());
+    pauseProjectPreviews();
     dialog.removeAttribute('data-closing');
     if (trigger && dialog.classList.contains('visual-project-dialog')) {
       dialogTriggers.set(dialog, trigger);
@@ -716,6 +778,7 @@ const columns = [
     });
     dialog.addEventListener('close', () => {
       if (dialog.open) return;
+      dialog.querySelectorAll('video').forEach((video) => video.pause());
       dialog.removeAttribute('data-closing');
       if (document.querySelector('dialog[open]')) return;
       document.documentElement.classList.remove('dialog-open');
@@ -726,6 +789,7 @@ const columns = [
   const cards = document.querySelectorAll<HTMLButtonElement>('[data-gallery-views]');
 
   const applyFilter = () => {
+    pauseProjectPreviews();
     const hash = location.hash.slice(1);
     const requested = hash === 'playground' ? 'visual-craft' : hash;
     const active = filters.some((link) => link.dataset.view === requested) ? requested : 'work';

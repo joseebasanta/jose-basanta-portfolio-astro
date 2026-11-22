@@ -307,6 +307,10 @@
   height: auto;
 }
 
+video.project-image {
+  pointer-events: none;
+}
+
 .project-card:hover {
   border-color: var(--color-gray-500);
 }
