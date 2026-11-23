@@ -270,13 +270,7 @@
   gap: 10px;
 }
 
-.project-tile {
-  position: relative;
-  min-width: 0;
-}
-
-.project-tile[hidden],
-.project-preview-toggle[hidden] {
+.project-card[hidden] {
   display: none;
 }
 
@@ -315,24 +309,6 @@
 
 video.project-image {
   pointer-events: none;
-}
-
-.project-preview-toggle {
-  position: absolute;
-  inset: 8px 8px auto auto;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  color: var(--color-foreground);
-  background: color-mix(in srgb, var(--color-background) 76%, transparent);
-  cursor: pointer;
-}
-
-.project-preview-toggle:hover {
-  background: var(--color-surface-hover);
 }
 
 .project-card:hover {
@@ -456,11 +432,6 @@ video.project-image {
 .close-button:hover {
   background: var(--color-surface-hover);
 }
-.dialog-cover {
-  width: 100%;
-  height: min(45vh, 400px);
-  background: var(--color-surface-strong);
-}
 .visual-project-dialog {
   position: fixed;
   inset: 0;
@@ -518,6 +489,11 @@ video.project-image {
 .visual-project-header h2 {
   @apply text-title-h3;
   margin-block-start: 6px;
+}
+
+.visual-project-header .project-tag {
+  margin-inline-start: 12px;
+  vertical-align: middle;
 }
 
 .visual-project-website {
@@ -600,15 +576,17 @@ video.project-image {
   background: var(--color-background);
 }
 
-.dialog-artwork,
 .visual-project-artwork {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 8px;
 }
 
-.visual-project-artwork {
+.visual-project-placeholder {
+  height: min(45dvh, 400px);
   border-radius: 8px;
+  background: var(--color-surface-strong);
 }
 
 .visual-project-description {
@@ -622,6 +600,11 @@ video.project-image {
   max-width: none;
   margin-block: 8px 4px;
   color: var(--color-foreground);
+}
+
+.visual-project-note {
+  @apply text-paragraph-xs;
+  color: var(--color-muted-foreground);
 }
 
 .visual-project-overview {
@@ -673,32 +656,17 @@ video.project-image {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .visual-project-panel {
-    transform: translate3d(0, 0, 0);
-    transition: transform 400ms cubic-bezier(0.28, 0.48, 0.25, 1);
-  }
-
   .visual-project-dialog::backdrop {
     opacity: 1;
-    transition: opacity 360ms ease;
-  }
-
-  .visual-project-dialog[data-closing] .visual-project-panel {
-    transform: translate3d(var(--panel-slide-distance), 0, 0);
-    transition-duration: 280ms;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity 440ms ease-out;
   }
 
   .visual-project-dialog[data-closing]::backdrop {
     opacity: 0;
-    transition-duration: 280ms;
+    transition-duration: 320ms;
   }
 
   @starting-style {
-    .visual-project-dialog[open] .visual-project-panel {
-      transform: translate3d(var(--panel-slide-distance), 0, 0);
-    }
-
     .visual-project-dialog[open]::backdrop {
       opacity: 0;
     }
@@ -727,11 +695,6 @@ video.project-image {
   color: var(--color-muted-foreground);
   @apply text-paragraph-md;
   margin-bottom: 15px;
-}
-.dialog-content p.concept-note {
-  @apply text-paragraph-xs;
-  margin-bottom: 0;
-  margin-top: 26px;
 }
 .small-dialog {
   max-width: 510px;
