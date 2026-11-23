@@ -356,8 +356,9 @@ const columns = [
       <div>
         <h1>Jose Basanta</h1>
         <p class="profile-bio">
-          I'm a product designer. This is a space for the interfaces, ideas, and experiments I
-          design and build.
+          I’m a product designer with a background in graphic design,{' '}
+          <strong>working in design and code</strong>. I care about how things look, but even more
+          about how they work—and how easily people can use them.
         </p>
         <div class="profile-actions">
           <button type="button" class="about-trigger" data-open="about-dialog">
@@ -531,12 +532,14 @@ const columns = [
           {p.website ? (
             <section class="visual-project-live-preview" aria-labelledby={`preview-${p.id}`}>
               <h3 class="eyebrow" id={`preview-${p.id}`}>Live preview</h3>
-              <iframe
-                data-project-website={p.website}
-                title={`Live preview of the ${p.title} website`}
-                loading="lazy"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-              ></iframe>
+              <div class="visual-project-live-viewport">
+                <iframe
+                  data-project-website={p.website}
+                  title={`Live preview of the ${p.title} website`}
+                  loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                ></iframe>
+              </div>
             </section>
           ) : p.video ? (
             <video
@@ -829,4 +832,16 @@ const columns = [
   document
     .querySelectorAll('.project-summary-track')
     .forEach((track) => summaryObserver.observe(track));
+
+  const websiteViewportObserver = new ResizeObserver((entries) => {
+    for (const { target, contentRect } of entries) {
+      const frame = target.querySelector('iframe');
+      if (!frame?.offsetWidth) continue;
+
+      frame.style.setProperty('--website-scale', String(contentRect.width / frame.offsetWidth));
+    }
+  });
+  document
+    .querySelectorAll('.visual-project-live-viewport')
+    .forEach((viewport) => websiteViewportObserver.observe(viewport));
 </script>
