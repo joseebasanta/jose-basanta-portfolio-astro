@@ -356,9 +356,9 @@ const columns = [
       <div>
         <h1>Jose Basanta</h1>
         <p class="profile-bio">
-          I’m a product designer with a background in graphic design,{' '}
+          A <strong>product designer</strong> with a background in engineering &amp; graphic design,{' '}
           <strong>working in design and code</strong>. I care about how things look, but even more
-          about how they work—and how easily people can use them.
+          about how they work and how easily people can use them.
         </p>
         <div class="profile-actions">
           <button type="button" class="about-trigger" data-open="about-dialog">
@@ -795,10 +795,23 @@ const columns = [
       syncProjectPreviews();
     });
   });
+  const galleryNav = document.querySelector<HTMLElement>('.gallery-nav');
   const filters = [...document.querySelectorAll<HTMLAnchorElement>('[data-view]')];
   const cards = document.querySelectorAll<HTMLButtonElement>('[data-gallery-views]');
 
-  const applyFilter = () => {
+  const positionGalleryIndicator = () => {
+    const activeLink = galleryNav?.querySelector('[aria-current="true"]');
+    if (!galleryNav || !activeLink) return;
+
+    const nav = galleryNav.getBoundingClientRect();
+    const link = activeLink.getBoundingClientRect();
+    galleryNav.style.setProperty('--gallery-indicator-x', `${link.left - nav.left}px`);
+    galleryNav.style.setProperty('--gallery-indicator-y', `${link.bottom - nav.top - 1}px`);
+    galleryNav.style.setProperty('--gallery-indicator-width', `${link.width}px`);
+    galleryNav.setAttribute('data-indicator-ready', '');
+  };
+
+  const applyFilter = (highlight = false) => {
     const hash = location.hash.slice(1);
     const requested = hash === 'playground' ? 'visual-craft' : hash;
     const active = filters.some((link) => link.dataset.view === requested) ? requested : 'work';
@@ -808,13 +821,30 @@ const columns = [
     });
     syncProjectPreviews();
     filters.forEach((link) => {
-      if (link.dataset.view === active) link.setAttribute('aria-current', 'true');
-      else link.removeAttribute('aria-current');
+      if (link.dataset.view === active) {
+        if (highlight && !link.hasAttribute('aria-current')) link.setAttribute('data-highlight', '');
+        link.setAttribute('aria-current', 'true');
+      } else {
+        link.removeAttribute('aria-current');
+        link.removeAttribute('data-highlight');
+      }
     });
+    positionGalleryIndicator();
   };
 
-  window.addEventListener('hashchange', applyFilter);
+  window.addEventListener('hashchange', () => applyFilter(true));
   applyFilter();
+
+  if (galleryNav) {
+    galleryNav.addEventListener('animationend', (event) => {
+      if (event.animationName === 'gallery-tab-highlight' && event.target instanceof Element) {
+        event.target.removeAttribute('data-highlight');
+      }
+    });
+    const galleryObserver = new ResizeObserver(positionGalleryIndicator);
+    galleryObserver.observe(galleryNav);
+    filters.forEach((link) => galleryObserver.observe(link));
+  }
 
   const summaryPixelsPerSecond = 18;
   const summaryObserver = new ResizeObserver((entries) => {
