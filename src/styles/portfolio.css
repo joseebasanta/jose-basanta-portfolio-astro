@@ -330,7 +330,6 @@
   border-radius: 10px;
   background: var(--color-surface-strong);
   color: var(--color-foreground);
-  cursor: pointer;
   text-align: left;
 }
 
@@ -343,7 +342,8 @@
   background: var(--color-gray-700);
 }
 
-.project-card.landscape {
+.project-card.landscape,
+.project-card.project-cover {
   aspect-ratio: auto;
 }
 
@@ -357,7 +357,11 @@ video.project-image {
   pointer-events: none;
 }
 
-.project-card:hover {
+button.project-card {
+  cursor: pointer;
+}
+
+button.project-card:hover {
   border-color: var(--color-gray-500);
 }
 
