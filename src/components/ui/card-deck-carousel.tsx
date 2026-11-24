@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent, PointerEvent } from 'react';
 import './card-deck-carousel.css';
 
-type Slide = { image: string; alt: string };
-type Props = { slides: Slide[]; title: string };
+type Slide = { image: string; alt: string; title: string };
+type Props = { slides: Slide[] };
 type Position = {
   index: number;
   x: number;
@@ -28,7 +28,7 @@ const tiltFor = (index: number) => {
   return (fraction * 2 - 1) * 6;
 };
 
-function CardDeckCarousel({ slides, title }: Props) {
+function CardDeckCarousel({ slides }: Props) {
   const count = slides.length;
   const [top, setTop] = useState(0);
   const [position, setPosition] = useState<Position | null>(null);
@@ -65,7 +65,10 @@ function CardDeckCarousel({ slides, title }: Props) {
         topIndex.current = next;
         setTop(next);
         setPosition(null);
-        if (manual) setAnnouncement(`Card ${next + 1} of ${count}. ${slides[next].alt}`);
+        if (manual) {
+          const { title, alt } = slides[next];
+          setAnnouncement(`Card ${next + 1} of ${count}. ${title}. ${alt}`);
+        }
         busy.current = false;
       };
       if (delay) timeout.current = window.setTimeout(finish, delay);
@@ -204,7 +207,7 @@ function CardDeckCarousel({ slides, title }: Props) {
       ref={root}
       role="region"
       aria-roledescription="carousel"
-      aria-label={`${title} images`}
+      aria-label="Visual Craft images"
       tabIndex={0}
       onKeyDown={handleKey}
     >
@@ -247,7 +250,7 @@ function CardDeckCarousel({ slides, title }: Props) {
         <button type="button" aria-label="Previous image" onClick={previous}>
           <i className="ph ph-caret-left" aria-hidden="true" />
         </button>
-        <h2>{title}</h2>
+        <h2>{slides[top].title}</h2>
         <span className="card-deck-count" aria-hidden="true">
           <b>{pad(top + 1)}</b> / {pad(count)}
         </span>

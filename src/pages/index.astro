@@ -409,6 +409,7 @@ const decks = await Promise.all(
       deck.artwork.map(async ({ image, alt }) => ({
         image: (await getImage({ src: image, width: 880, format: 'webp', quality: 'high' })).src,
         alt,
+        title: deck.title,
       })),
     ),
   })),
@@ -654,7 +655,7 @@ const decks = await Promise.all(
       </div>
     </dialog>
   ))}
-  {decks.map(({ id, title, slides }) => (
+  {decks.map(({ id, title }, index) => (
     <dialog class="visual-project-dialog" id={`project-${id}`} aria-label={title}>
       <div class="visual-project-panel card-deck-panel">
         <button
@@ -666,7 +667,10 @@ const decks = await Promise.all(
         >
           <i class="ph ph-x" aria-hidden="true"></i>
         </button>
-        <DialogCardDeckCarousel client:load title={title} slides={slides} />
+        <DialogCardDeckCarousel
+          client:load
+          slides={[...decks.slice(index), ...decks.slice(0, index)].flatMap((deck) => deck.slides)}
+        />
       </div>
     </dialog>
   ))}

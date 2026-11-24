@@ -1,3 +1,5 @@
+@reference '../../styles/global.css';
+
 .card-deck-panel {
   background: var(--color-background);
 }
@@ -33,7 +35,7 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 20px;
   background: var(--color-surface);
   box-shadow:
     0 1px 2px rgb(0 0 0 / 8%),
@@ -80,20 +82,15 @@
 }
 
 .card-deck-controls h2 {
+  @apply text-label-lg md:text-label-xl font-sans;
   flex: 1;
   min-width: 0;
-  font:
-    500 clamp(18px, 2.2vw, 24px) / 1.15 Georgia,
-    serif;
 }
 
 .card-deck-count {
+  @apply text-label-xs font-sans tabular-nums;
   flex: none;
   white-space: nowrap;
-  font:
-    500 12px / 1 ui-monospace,
-    monospace;
-  letter-spacing: 0.14em;
   color: var(--color-muted-foreground);
 }
 
