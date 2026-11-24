@@ -280,28 +280,30 @@
 @supports (background-clip: text) {
   @media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
     .gallery-nav a[data-highlight] {
+      --gallery-highlight-base: #858585;
       color: transparent;
+      background-color: var(--gallery-highlight-base);
       background-image: linear-gradient(
         110deg,
-        #858585 35%,
+        var(--gallery-highlight-base) 35%,
         var(--color-gray-0) 50%,
-        #858585 75%
+        var(--gallery-highlight-base) 75%
       );
-      background-repeat: repeat-x;
+      background-repeat: no-repeat;
       background-size: 200% 100%;
       background-clip: text;
-      animation: gallery-tab-highlight 2s linear infinite;
+      animation: gallery-tab-highlight 2s linear;
     }
   }
 }
 
 @keyframes gallery-tab-highlight {
   from {
-    background-position: 200% 0;
+    background-position: 150% 0;
   }
 
   to {
-    background-position: -200% 0;
+    background-position: -50% 0;
   }
 }
 
