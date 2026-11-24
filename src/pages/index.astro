@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import AboutContent from '@/components/portfolio/AboutContent.astro';
 import GalleryCard from '@/components/portfolio/GalleryCard.astro';
 import '@fontsource-variable/inter';
 import '@phosphor-icons/web/regular';
@@ -108,7 +109,13 @@ const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
         </div>
         <p class="profile-signoff">Always curious. Always making.</p>
         <div class="profile-actions">
-          <button class="icon-button" data-open="about-dialog" aria-label="About Jose">
+          <button
+            class="icon-button"
+            data-open="about-dialog"
+            aria-label="About Jose"
+            aria-haspopup="dialog"
+            aria-controls="about-dialog"
+          >
             <i class="ph ph-user" aria-hidden="true"></i>
           </button>
           <button class="contact-button" data-open="contact-dialog">
@@ -122,7 +129,9 @@ const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
           <a href="#playground" data-view="playground">
             Playground
           </a>
-          <button data-open="about-dialog">About</button>
+          <button data-open="about-dialog" aria-haspopup="dialog" aria-controls="about-dialog">
+            About Me
+          </button>
         </nav>
       </section>
       <section class="current-card">
@@ -345,31 +354,13 @@ const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
       </div>
     </dialog>
   ))}
-  <dialog class="studio-dialog small-dialog" id="about-dialog" aria-labelledby="about-title">
-    <button class="close-button" data-close aria-label="Close about">
-      <i class="ph ph-x" aria-hidden="true"></i>
-    </button>
-    <div class="dialog-content">
-      <img
-        class="avatar"
-        src="/images/portfolio/avatar.png"
-        width="80"
-        height="80"
-        alt="Jose Basanta monogram"
-      />
-      <span class="eyebrow">A little introduction</span>
-      <h2 id="about-title">Hi, I'm Jose.</h2>
-      <p>
-        I'm a product designer. This is my corner of the internet for sharing the things I design,
-        build, and explore.
-      </p>
-      <p>
-        A mix of product concepts, visual experiments, and small ideas that turn into something.
-      </p>
-      <button class="primary-button" data-close>
-        Explore the work <i class="ph ph-arrow-right" aria-hidden="true"></i>
+  <dialog class="studio-dialog about-dialog" id="about-dialog" aria-labelledby="about-title">
+    <div class="about-dialog-controls">
+      <button class="close-button" data-close aria-label="Close about" autofocus>
+        <i class="ph ph-x" aria-hidden="true"></i>
       </button>
     </div>
+    <AboutContent />
   </dialog>
   <dialog class="studio-dialog small-dialog" id="contact-dialog" aria-labelledby="contact-title">
     <button class="close-button" data-close aria-label="Close contact">
@@ -420,12 +411,33 @@ const featuredProjects = ['nimbus', 'field', 'elsewhere'].map((id) =>
     </div>
   </dialog>
 </BaseLayout>
+<style>
+  .studio-dialog.about-dialog {
+    width: min(1040px, calc(100% - 36px));
+    max-width: none;
+    overflow: auto;
+  }
+
+  .about-dialog-controls {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: 0;
+  }
+
+  @media (max-width: 600px) {
+    .studio-dialog.about-dialog {
+      width: calc(100% - 20px);
+    }
+  }
+</style>
 <script>
   const openDialog = (id: string) => {
     const dialog = document.getElementById(id);
     if (!(dialog instanceof HTMLDialogElement)) return;
     document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach((item) => item.close());
     dialog.showModal();
+    if (id === 'about-dialog') dialog.scrollTop = 0;
     document.documentElement.classList.add('dialog-open');
   };
   document.querySelectorAll<HTMLButtonElement>('[data-open]').forEach((button) => {

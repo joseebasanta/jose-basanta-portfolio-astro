@@ -1,0 +1,265 @@
+---
+interface Props {
+  standalone?: boolean;
+}
+
+const { standalone = false } = Astro.props;
+const Title = standalone ? 'h1' : 'h2';
+const SectionTitle = standalone ? 'h2' : 'h3';
+const galleryColumns = [
+  ['4 / 5', '4 / 3', '1 / 1'],
+  ['4 / 3', '4 / 5', '1 / 1'],
+];
+---
+
+<article class:list={['about-content', { 'about-page-card': standalone }]}>
+  <header class="about-intro">
+    <div>
+      <Title id="about-title">Jose Basanta</Title>
+      <p class="about-role">Product Designer</p>
+      <div class="about-bio">
+        <p>Long-form bio to come.</p>
+      </div>
+    </div>
+    <div class="about-frame about-portrait">Portrait to come</div>
+  </header>
+
+  <section class="about-panel" aria-labelledby="about-experience-title">
+    <SectionTitle id="about-experience-title">Work experience</SectionTitle>
+    <ul class="about-experience">
+      {Array.from({ length: 3 }, () => (
+        <li>
+          <span class="about-company">
+            <span class="about-logo" aria-hidden="true" />
+            Company name
+          </span>
+          <span class="about-job">
+            <span>Role</span>
+            <span>Dates</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="about-panel" aria-labelledby="about-philosophy-title">
+    <SectionTitle id="about-philosophy-title">Work philosophy</SectionTitle>
+    <p class="about-philosophy-intro">Work philosophy introduction to come.</p>
+    {Array.from({ length: 4 }, (_, index) => (
+      <details class="about-principle">
+        <summary>
+          <span class="about-principle-number" aria-hidden="true">
+            0{index + 1}
+          </span>
+          <span>Principle {index + 1}</span>
+          <span class="about-principle-icon" aria-hidden="true" />
+        </summary>
+        <p>Principle description to come.</p>
+      </details>
+    ))}
+  </section>
+
+  <section aria-labelledby="about-gallery-title">
+    <SectionTitle id="about-gallery-title">Photo gallery</SectionTitle>
+    <div class="about-gallery">
+      {galleryColumns.map((column) => (
+        <div class="about-gallery-column">
+          {column.map((ratio) => (
+            <div class="about-frame" style={{ aspectRatio: ratio }} />
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+</article>
+
+<style>
+  .about-content {
+    --about-muted: var(--studio-muted, var(--color-muted-foreground));
+    --about-line: var(--studio-line, var(--color-border));
+    --about-accent: var(--studio-purple, #b6a0ff);
+    display: grid;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    padding: clamp(1rem, 5vw, 3.25rem);
+    padding-block-start: max(3.5rem, min(5vw, 4rem));
+  }
+
+  .about-page-card {
+    border: 1px solid var(--about-line);
+    border-radius: 23px;
+    background: #19181c;
+    padding-block-start: clamp(1rem, 5vw, 3.25rem);
+  }
+
+  .about-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: start;
+    gap: clamp(1.5rem, 5vw, 4rem);
+  }
+
+  #about-title {
+    font-size: clamp(2.25rem, 5.8vw, 3.75rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  .about-role {
+    margin-top: 0.625rem;
+    color: var(--about-accent);
+  }
+
+  .about-bio {
+    max-width: 55ch;
+    margin-top: clamp(1rem, 3vw, 2rem);
+    color: var(--about-muted);
+    line-height: 1.6;
+  }
+
+  .about-bio p + p {
+    margin-top: 1em;
+  }
+
+  .about-frame {
+    overflow: hidden;
+    border: 1px solid var(--about-line);
+    border-radius: 12px;
+    background: #1d1c20;
+  }
+
+  .about-portrait {
+    aspect-ratio: 4 / 5;
+    display: grid;
+    place-items: center;
+    color: var(--about-muted);
+    font-size: 0.875rem;
+  }
+
+  .about-panel {
+    padding: clamp(1rem, 3vw, 2rem);
+    border: 1px solid var(--about-line);
+    border-radius: 16px;
+    background: #202024;
+  }
+
+  .about-content section :is(h2, h3) {
+    font-size: clamp(1.375rem, 2.5vw, 1.875rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .about-experience {
+    margin-top: 1rem;
+  }
+
+  .about-experience li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding-block: 0.75rem;
+  }
+
+  .about-experience li + li {
+    border-top: 1px solid var(--about-line);
+  }
+
+  .about-company {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.5rem, 2vw, 1rem);
+  }
+
+  .about-logo {
+    flex: none;
+    width: clamp(2rem, 5vw, 2.75rem);
+    aspect-ratio: 1;
+    border: 1px solid var(--about-line);
+    border-radius: 8px;
+    background: #28272d;
+  }
+
+  .about-job {
+    display: grid;
+    gap: 0.125rem;
+    text-align: right;
+    color: var(--about-muted);
+  }
+
+  .about-job span + span {
+    font-size: 0.8125rem;
+  }
+
+  .about-philosophy-intro {
+    margin-block: 0.75rem 1.5rem;
+    color: var(--about-muted);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+  }
+
+  .about-principle {
+    border-top: 1px solid var(--about-line);
+  }
+
+  .about-principle summary {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(0.5rem, 2vw, 1rem);
+    min-height: 3rem;
+    padding-block: 0.75rem;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .about-principle summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .about-principle summary:hover {
+    color: var(--about-accent);
+  }
+
+  .about-principle-number {
+    color: var(--about-accent);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .about-principle-icon::before {
+    content: '+';
+  }
+
+  .about-principle[open] .about-principle-icon::before {
+    content: '−';
+  }
+
+  .about-principle p {
+    padding: 0 0 1rem calc(1.5rem + clamp(0.5rem, 2vw, 1rem));
+    color: var(--about-muted);
+  }
+
+  .about-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.5rem, 2vw, 0.875rem);
+    margin-top: 1rem;
+  }
+
+  .about-gallery-column {
+    display: grid;
+    gap: inherit;
+  }
+
+  @media (max-width: 600px) {
+    .about-intro {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .about-portrait {
+      width: min(100%, 18rem);
+    }
+  }
+</style>
