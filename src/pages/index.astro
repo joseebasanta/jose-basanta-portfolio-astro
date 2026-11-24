@@ -911,7 +911,7 @@ const decks = await Promise.all(
     galleryNav.setAttribute('data-indicator-ready', '');
   };
 
-  const applyFilter = (highlight = false) => {
+  const applyFilter = () => {
     const hash = location.hash.slice(1);
     const requested = hash === 'playground' ? 'visual-craft' : hash;
     const active = filters.some((link) => link.dataset.view === requested) ? requested : 'work';
@@ -922,7 +922,6 @@ const decks = await Promise.all(
     syncProjectPreviews();
     filters.forEach((link) => {
       if (link.dataset.view === active) {
-        if (highlight && !link.hasAttribute('aria-current')) link.setAttribute('data-highlight', '');
         link.setAttribute('aria-current', 'true');
       } else {
         link.removeAttribute('aria-current');
@@ -932,8 +931,33 @@ const decks = await Promise.all(
     positionGalleryIndicator();
   };
 
-  window.addEventListener('hashchange', () => applyFilter(true));
+  window.addEventListener('hashchange', applyFilter);
   applyFilter();
+
+  const getGalleryHighlight = (link: HTMLAnchorElement) =>
+    link
+      .getAnimations()
+      .find(
+        (animation) =>
+          animation instanceof CSSAnimation && animation.animationName === 'gallery-tab-highlight',
+      );
+
+  const playGalleryHighlight = (link: HTMLAnchorElement) => {
+    link.setAttribute('data-highlight', '');
+    const highlight = getGalleryHighlight(link);
+    if (!highlight) {
+      link.removeAttribute('data-highlight');
+      return;
+    }
+
+    const clearHighlight = () => {
+      if (getGalleryHighlight(link)?.playState !== 'running')
+        link.removeAttribute('data-highlight');
+    };
+    highlight.onfinish = clearHighlight;
+    highlight.oncancel = clearHighlight;
+    highlight.currentTime = 0;
+  };
 
   filters.forEach((link) => {
     link.addEventListener('click', (event) => {
@@ -947,7 +971,7 @@ const decks = await Promise.all(
       )
         return;
 
-      if (link.hasAttribute('aria-current')) link.setAttribute('data-highlight', '');
+      playGalleryHighlight(link);
     });
   });
 
