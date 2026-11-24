@@ -1,0 +1,142 @@
+.card-deck-panel {
+  background: var(--color-background);
+}
+
+.card-deck {
+  --deck-width: min(78vw, 440px, 49.6dvh);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 5dvh, 52px);
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  padding: 24px 16px;
+}
+
+.card-deck:focus-visible {
+  outline: 2px solid var(--color-foreground);
+  outline-offset: -2px;
+}
+
+.card-deck-stack {
+  position: relative;
+  flex: none;
+  width: var(--deck-width);
+  aspect-ratio: 4 / 5;
+  touch-action: pan-y;
+}
+
+.card-deck-print {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--color-surface);
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 8%),
+    0 30px 60px -30px rgb(0 0 0 / 45%);
+  transition:
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.4s ease,
+    filter 0.4s ease;
+}
+
+.card-deck-print[data-top] {
+  cursor: grab;
+}
+
+.card-deck-print[data-motion='drag'] {
+  cursor: grabbing;
+}
+
+.card-deck-print[data-motion='drag'],
+.card-deck-print[data-motion='snap'] {
+  transition: none;
+}
+
+.card-deck-print[data-motion='fly'] {
+  transition:
+    transform 0.45s cubic-bezier(0.3, 0.5, 0.3, 1),
+    opacity 0.45s ease;
+}
+
+.card-deck-print img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.card-deck-controls {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+  width: min(100%, max(280px, var(--deck-width)));
+}
+
+.card-deck-controls h2 {
+  flex: 1;
+  min-width: 0;
+  font:
+    500 clamp(18px, 2.2vw, 24px) / 1.15 Georgia,
+    serif;
+}
+
+.card-deck-count {
+  flex: none;
+  white-space: nowrap;
+  font:
+    500 12px / 1 ui-monospace,
+    monospace;
+  letter-spacing: 0.14em;
+  color: var(--color-muted-foreground);
+}
+
+.card-deck-count b {
+  font-weight: inherit;
+  color: var(--color-foreground);
+}
+
+.card-deck-controls button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.card-deck-controls button:hover {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.card-deck-controls button:focus-visible {
+  outline: 2px solid var(--color-foreground);
+  outline-offset: 2px;
+}
+
+@media (max-width: 740px) {
+  .card-deck-panel .card-deck-close {
+    position: absolute;
+    top: max(16px, env(safe-area-inset-top));
+    right: 16px;
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-deck-print,
+  .card-deck-print[data-motion='fly'] {
+    transition: none;
+  }
+}
