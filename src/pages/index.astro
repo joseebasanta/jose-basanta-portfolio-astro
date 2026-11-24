@@ -895,21 +895,8 @@ const decks = await Promise.all(
       syncProjectPreviews();
     });
   });
-  const galleryNav = document.querySelector<HTMLElement>('.gallery-nav');
   const filters = [...document.querySelectorAll<HTMLAnchorElement>('[data-view]')];
   const cards = document.querySelectorAll<HTMLElement>('[data-gallery-views]');
-
-  const positionGalleryIndicator = () => {
-    const activeLink = galleryNav?.querySelector('[aria-current="true"]');
-    if (!galleryNav || !activeLink) return;
-
-    const nav = galleryNav.getBoundingClientRect();
-    const link = activeLink.getBoundingClientRect();
-    galleryNav.style.setProperty('--gallery-indicator-x', `${link.left - nav.left}px`);
-    galleryNav.style.setProperty('--gallery-indicator-y', `${link.bottom - nav.top - 1}px`);
-    galleryNav.style.setProperty('--gallery-indicator-width', `${link.width}px`);
-    galleryNav.setAttribute('data-indicator-ready', '');
-  };
 
   const applyFilter = () => {
     const hash = location.hash.slice(1);
@@ -928,7 +915,6 @@ const decks = await Promise.all(
         link.removeAttribute('data-highlight');
       }
     });
-    positionGalleryIndicator();
   };
 
   window.addEventListener('hashchange', applyFilter);
@@ -974,12 +960,6 @@ const decks = await Promise.all(
       playGalleryHighlight(link);
     });
   });
-
-  if (galleryNav) {
-    const galleryObserver = new ResizeObserver(positionGalleryIndicator);
-    galleryObserver.observe(galleryNav);
-    filters.forEach((link) => galleryObserver.observe(link));
-  }
 
   const summaryPixelsPerSecond = 18;
   const summaryObserver = new ResizeObserver((entries) => {
