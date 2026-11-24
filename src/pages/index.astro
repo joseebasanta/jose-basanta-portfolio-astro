@@ -935,12 +935,23 @@ const decks = await Promise.all(
   window.addEventListener('hashchange', () => applyFilter(true));
   applyFilter();
 
-  if (galleryNav) {
-    galleryNav.addEventListener('animationend', (event) => {
-      if (event.animationName === 'gallery-tab-highlight' && event.target instanceof Element) {
-        event.target.removeAttribute('data-highlight');
-      }
+  filters.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey
+      )
+        return;
+
+      if (link.hasAttribute('aria-current')) link.setAttribute('data-highlight', '');
     });
+  });
+
+  if (galleryNav) {
     const galleryObserver = new ResizeObserver(positionGalleryIndicator);
     galleryObserver.observe(galleryNav);
     filters.forEach((link) => galleryObserver.observe(link));
